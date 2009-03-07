@@ -1,6 +1,6 @@
 = sparrow
 
-Sparrow is a JMS client (Jruby based).
+Sparrow is a JMS client (JRuby based).
 
 == Copyright
 

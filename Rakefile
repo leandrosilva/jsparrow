@@ -7,7 +7,7 @@ begin
     gem.name = "sparrow"
     gem.summary = %Q{Sparrow is a JMS client (JRuby based)}
     gem.email = "leandrodoze@gmail.com"
-    gem.homepage = "http://github.com/codezone/sparrow"
+    gem.homepage = "http://github.com/leandrosilva/sparrow"
     gem.authors = ["Leandro Silva"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
