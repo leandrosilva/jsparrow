@@ -9,6 +9,7 @@ begin
     gem.email = "leandrodoze@gmail.com"
     gem.homepage = "http://github.com/leandrosilva/sparrow"
     gem.authors = ["Leandro Silva"]
+    gem.files =  FileList["[A-Z]*", "{lib,spec}/**/*"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError
