@@ -1,0 +1,7 @@
+= sparrow
+
+Description goes here.
+
+== Copyright
+
+Copyright (c) 2009 Leandro Silva. See LICENSE for details.
