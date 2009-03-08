@@ -1,14 +1,14 @@
-# Definição do diretórios onde estão as libs
+# Libs directory definition
 JEE_LIB_DIR = File.expand_path(File.dirname(__FILE__)) + '/jee'
 
-# Antes de qualquer outra, a fundamental
+# Befor all, the fundamental require for us
 require 'java'
 
-# Biblioteca essencial de integração com JMS
+# Lib to JMS integration (contain the META-INF/applicationContext.xml)
 require "#{JEE_LIB_DIR}/sparrow-essential.jar"
 
-#  Biblioteca Java EE principal
+#  Java EE
 require "#{JEE_LIB_DIR}/javaee-1.5.jar"
 
-# Biblioteca da API JMS
+# JMS API
 require "#{JEE_LIB_DIR}/jms.jar"
