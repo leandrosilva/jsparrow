@@ -139,12 +139,18 @@ module Sparrow
       class Listener < Base
         include MessageListener
         
+        attr_reader :connection_factory_name, :destination_name, :criteria_to_receiving
+        
         #
         # Estes parametros serao injetados pelo listener manager de acordo com o
         # que houver sido definido pelos metodos connection_factory_name e destination_name.
         #
         def initialize(connection_factory, destination)
           super(connection_factory, destination)
+          
+          @connection_factory_name = 'undefined'
+          @destination_name        = 'undefined'
+          @criteria_to_receiving   = {}
         end
 
         #
@@ -153,7 +159,9 @@ module Sparrow
         # Invariavelmente deve ser usado pelas subclasses para informar qual devera
         # ser a connection factory usada por esse listener.
         #
-        def connection_factory_name(name)
+        def use_connection_factory(jndi_name)
+          @connection_factory_name = jndi_name
+        end
         
         #
         # Nome JNDI do destino JMS que sera escutado.
@@ -161,8 +169,8 @@ module Sparrow
         # Invariavelmente deve ser usado pelas subclasses, para informar o nome
         # da queue ou topico que sera escutado.
         #
-        def destination_name(name)
-          @destination_name = name
+        def listen_to_destination(jndi_name)
+          @destination_name = jndi_name
         end
         
         #
@@ -171,9 +179,9 @@ module Sparrow
         # Invariavelmente as subclasses precisam usar esse metodo para definir
         # os criterios de recebimento que este listener levara em conta.
         #
-        def criteria_for_receiving(criteria = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''})
+        def receive_only_in_criteria(criteria = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''})
           # Valor default para timeout, caso nao tenha sido informado
-          @criteria_for_receiving[:timeout] = criteria[:timeout] || DEFAULT_RECEIVER_TIMEOUT
+          @criteria_to_receiving[:timeout] = criteria[:timeout] || DEFAULT_RECEIVER_TIMEOUT
         end
 
         #
@@ -236,3 +244,4 @@ module Sparrow
     end
   end
 end
+
