@@ -133,38 +133,49 @@ module Sparrow
       #
       # Ouvintes de mensagens.
       #
-      # TODO: Completar a implementacao. Ainda nao esta legal.
+      # TODO: Completar a implementacao. Ainda nao esta legal. (Ja dei um tapinha,
+      #       acho que agora ta bem proximo do que deve ser.)
       #
       class Listener < Base
         include MessageListener
         
+        #
+        # Estes parametros serao injetados pelo listener manager de acordo com o
+        # que houver sido definido pelos metodos connection_factory_name e destination_name.
+        #
         def initialize(connection_factory, destination)
           super(connection_factory, destination)
         end
+
+        #
+        # Nome JNDI da connection factory que ser usada para criar conexoes JMS.
+        #
+        # Invariavelmente deve ser usado pelas subclasses para informar qual devera
+        # ser a connection factory usada por esse listener.
+        #
+        def connection_factory_name(name)
         
+        #
+        # Nome JNDI do destino JMS que sera escutado.
+        #
+        # Invariavelmente deve ser usado pelas subclasses, para informar o nome
+        # da queue ou topico que sera escutado.
+        #
+        def destination_name(name)
+          @destination_name = name
+        end
+        
+        #
+        # Criterios de selecao de mensagens, seguindo o padrao JMS.
+        #
+        # Invariavelmente as subclasses precisam usar esse metodo para definir
+        # os criterios de recebimento que este listener levara em conta.
+        #
         def criteria_for_receiving(criteria = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''})
           # Valor default para timeout, caso nao tenha sido informado
           @criteria_for_receiving[:timeout] = criteria[:timeout] || DEFAULT_RECEIVER_TIMEOUT
         end
-        
-        #
-        # Nome pelo qual este listener sera conhecido.
-        #
-        # Invariavelmente deve ser re-implementado nas subclasses.
-        #
-        def name
-          raise Utils::Exception::AbstractMethodError.new('name')
-        end
-        
-        #
-        # Destino JMS que sera escutado.
-        #
-        # Invariavelmente deve ser re-implementado nas subclasses.
-        #
-        def destination_name
-          raise Utils::Exception::AbstractMethodError.new('destination_name')
-        end
-        
+
         #
         # Inicia a escuta de mensagens.
         #
