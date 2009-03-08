@@ -6,7 +6,7 @@ Sparrow is a JMS client (JRuby based).
 
 Two steps to send and receive JMS from a Java EE application server.
 
-# 1) Create and setup a sparrow JMS client:
+1) Create and setup a sparrow JMS client:
 
   jms_client = Sparrow::JMS::Connection::Client.new do |properties|
     properties.client_jar_file         = '/oc4j_extended_101330/j2ee/home/oc4jclient.jar'
@@ -24,7 +24,7 @@ Two steps to send and receive JMS from a Java EE application server.
       :my_queue => 'jms/MyQueue'
     )
 
-# 2) OK! You can send and receive messages right now!
+2) OK! You can send and receive messages right now!
 
   jms_client.queue_sender(:my_queue).send_text_message('sparrow rocks!') do |msg|
     msg.set_string_property('recipient', 'sparrow-example')
