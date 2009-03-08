@@ -1,8 +1,8 @@
 require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
 #
-# Cenário pós-obtenção de um Sender e um Receiver, quando deve ser possível enviar e
-# receber mensagens de três tipos (Texto, Objeto e Mapa) de uma queue especifica,
+# Cenario pos-obtencao de um Sender e um Receiver, quando deve ser possivel enviar e
+# receber mensagens de tres tipos (Texto, Objeto e Mapa) de uma queue especifica,
 # individualmente ou em lote.
 #
 describe Sparrow::JMS::Messaging, ', quando tem um Sender e um Receiver para uma Queue especifica,' do
@@ -89,7 +89,7 @@ describe Sparrow::JMS::Messaging, ', quando tem um Sender e um Receiver para uma
       map_message.set_long('id', my_id_long)
       producer.send(map_message)
       
-      # Commita as três mensagens enviadas na sessão
+      # Commita as tres mensagens enviadas na sessao
       session.commit
     end
     
@@ -118,8 +118,8 @@ describe Sparrow::JMS::Messaging, ', quando tem um Sender e um Receiver para uma
 end
 
 #
-# Cenário pós-configuração do cliente JMS, quando deve ser possível escutar mensagens
-# através de objetos listeners.
+# Cenario pos-configuracao do cliente JMS, quando deve ser possivel escutar mensagens
+# atraves de objetos listeners.
 #
 describe Sparrow::JMS::Messaging::Listener,
          ', quando um Listener se registra para escutar uma Queue especifica,' do

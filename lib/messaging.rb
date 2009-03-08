@@ -7,17 +7,17 @@ module Sparrow
     module Messaging
 
       #
-      # Tempo padrão de timeout no recebimento de mensagens = 1 milesegundo.
+      # Tempo padrao de timeout no recebimento de mensagens = 1 milesegundo.
       #
       DEFAULT_RECEIVER_TIMEOUT = 1000
     
       #
       # Classe base para mensageiros, que enviam ou recebem mensagens, tanto
-      # para filas ou tópicos.
+      # para filas ou topicos.
       #
       class Base
         def initialize(connection_factory, destination)
-          # Fábrica de conexões JMS
+          # Fabrica de conexoes JMS
           @connection_factory = connection_factory
 
           # Destino JMS para envio ou recebimento de mensagens
@@ -33,7 +33,6 @@ module Sparrow
           send_message do |session|
             text_message = session.create_text_message(text)
             
-            # Se houver uma bloco para tratamento da mensagem
             if block_given?
               yield(text_message)
             end
@@ -46,7 +45,6 @@ module Sparrow
           send_message do |session|
             object_message = session.create_object_message(object)
             
-            # Se houver uma bloco para tratamento da mensagem
             if block_given?
               yield(object_message)
             end
@@ -59,7 +57,6 @@ module Sparrow
           send_message do |session|
             map_message = session.create_map_message
             
-            # Se houver uma bloco para tratamento da mensagem
             if block_given?
               yield(map_message)
             end
@@ -69,15 +66,15 @@ module Sparrow
         end
         
         def send_messages(&message_sender)
-          # Cria uma conexão, uma sessão e um emissor de qualquer tipo de mensagem
+          # Cria uma conexao, uma sessao e um emissor de qualquer tipo de mensagem
           connection = @connection_factory.create_connection
           session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
           producer   = session.create_producer(@destination)
           
-          # Passa o controle que trata a emissão de mensagens
+          # Passa o controle que trata a emissao de mensagens
           message_sender.call(session, producer)
 
-          # Fecha a conexão
+          # Fecha a conexao
           connection.close
         end
         
@@ -85,7 +82,7 @@ module Sparrow
         private
         
         def send_message(&message_creator)
-          # Cria uma conexão, uma sessão e um emissor de qualquer tipo de mensagem
+          # Cria uma conexao, uma sessao e um emissor de qualquer tipo de mensagem
           connection = @connection_factory.create_connection
           session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
           producer   = session.create_producer(@destination)
@@ -96,7 +93,7 @@ module Sparrow
           # Envia a mensagem
           producer.send(message)
           
-          # Commita a sessão e fecha a conexão
+          # Commita a sessao e fecha a conexao
           session.commit
           connection.close
         end
@@ -107,19 +104,19 @@ module Sparrow
       #
       class Receiver < Base    
         def receive_message(criteria_for_receiving = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''}, &message_handler)
-          # Cria uma conexão, uma sessão e um consumidor de qualquer tipo de mensagem
+          # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
           connection = @connection_factory.create_connection
           session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
           consumer   = session.create_consumer(@destination, criteria_for_receiving[:selector])
           
-          # Prepara a conexão para receber mensagens
+          # Prepara a conexao para receber mensagens
           connection.start
           
           # Inicia o recebimento de mensagens
           timeout = criteria_for_receiving[:timeout] || DEFAULT_RECEIVER_TIMEOUT
           
           while (received_message = consumer.receive(timeout))
-            # Inclui o modulo de identificação de mensagem, util para o message_handler
+            # Inclui o modulo de identificacao de mensagem, util para o message_handler
             class << received_message
               include MessageType
             end
@@ -128,7 +125,7 @@ module Sparrow
             message_handler.call(received_message)
           end
           
-          # Fecha a conexão
+          # Fecha a conexao
           connection.close
         end
       end
@@ -136,7 +133,7 @@ module Sparrow
       #
       # Ouvintes de mensagens.
       #
-      # TODO: Completar a implementação. Ainda não está legal.
+      # TODO: Completar a implementacao. Ainda nao esta legal.
       #
       class Listener < Base
         include MessageListener
@@ -146,12 +143,12 @@ module Sparrow
         end
         
         def criteria_for_receiving(criteria = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''})
-          # Valor default para timeout, caso não tenha sido informado
+          # Valor default para timeout, caso nao tenha sido informado
           @criteria_for_receiving[:timeout] = criteria[:timeout] || DEFAULT_RECEIVER_TIMEOUT
         end
         
         #
-        # Nome pelo qual este listener será conhecido.
+        # Nome pelo qual este listener sera conhecido.
         #
         # Invariavelmente deve ser re-implementado nas subclasses.
         #
@@ -160,7 +157,7 @@ module Sparrow
         end
         
         #
-        # Destino JMS que será escutado.
+        # Destino JMS que sera escutado.
         #
         # Invariavelmente deve ser re-implementado nas subclasses.
         #
@@ -172,7 +169,7 @@ module Sparrow
         # Inicia a escuta de mensagens.
         #
         def start_listening
-          # Cria uma conexão, uma sessão e um consumidor de qualquer tipo de mensagem
+          # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
           connection = @connection_factory.create_connection
           session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
           consumer   = session.create_consumer(@destination, @criteria_for_receiving[:selector])
@@ -180,15 +177,15 @@ module Sparrow
           # Registra-se como ouvinte
           consumer.message_listener = self
           
-          # inicia a escuta de mensagens
+          # Inicia a escuta de mensagens
           connection.start
         end
         
         #
-        # Faz o enriquecimento do objeto mensagem e delega para o método on_receive_message
+        # Faz o enriquecimento do objeto mensagem e delega para o metodo on_receive_message
         # que, implementado pelas subclasses, efetivamente trata a mensagem.
         #
-        # Não deve ser re-implementado por subclasses.
+        # Nao deve ser re-implementado por subclasses.
         #
         def on_message(received_message)
           class << received_message
@@ -199,8 +196,8 @@ module Sparrow
         end
         
         #
-        # É executado todas as vezes que chega uma mensagem que atenda aos critérios
-        # definido para este listener (na variável de instância @criteria).
+        # E executado todas as vezes que chega uma mensagem que atenda aos criterios
+        # definido para este listener (na variavel de instância @criteria).
         #
         # Invariavelmente deve ser re-implementado nas subclasses.
         #

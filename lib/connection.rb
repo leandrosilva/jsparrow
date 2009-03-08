@@ -7,8 +7,8 @@ module Sparrow
     module Connection
 
       #
-      # Configurações necessárias para que clientes JMS se conectem
-      # ao servidor de aplicações Java EE via JNDI Context.
+      # Configuracoes necessarias para que clientes JMS se conectem
+      # ao servidor de aplicacoes Java EE via JNDI Context.
       #
       class Properties
         attr_accessor :client_jar_file,
@@ -16,7 +16,7 @@ module Sparrow
                       :security_principal, :security_credentials
         
         #
-        # Cria um Hashtable Java contendo as configurações atuais.
+        # Cria um Hashtable Java contendo as configuracoes atuais.
         #
         def to_jndi_environment_hashtable
           jndi_env = Hashtable.new
@@ -37,10 +37,10 @@ module Sparrow
         end
         
         #
-        # Constroi um contexto JNDI inicial a partir das configurações atuais.
+        # Constroi um contexto JNDI inicial a partir das configuracoes atuais.
         #
         def build_jndi_context
-            # Carrega a biblioteca cliente do servidor de aplicações
+            # Carrega a biblioteca cliente do servidor de aplicacoes
             require @client_jar_file
             
             InitialContext.new(to_jndi_environment_hashtable)
@@ -48,7 +48,7 @@ module Sparrow
       end
     
       #
-      # Cliente JMS que possibilita a conexão com o servidor de aplicações Java EE
+      # Cliente JMS que possibilita a conexao com o servidor de aplicacoes Java EE
       # que provê o serviço JMS.
       #
       class Client
@@ -65,7 +65,7 @@ module Sparrow
             raise ClientInitializationError.new(@properties, cause)
           end
           
-          # Conexões, filas, tópicos, senders e receivers que serão habilitados
+          # Conexões, filas, tópicos, senders e receivers que serao habilitados
           @connection_factories = {}
           @queues               = {}
           @queue_senders        = {}

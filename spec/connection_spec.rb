@@ -1,9 +1,9 @@
 require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
 #
-# Cenário de configuração do cliente JMS, quando são informadas as propriedades de ambiente
-# para conexão com o servidor de aplicações e a inicialização do contexto JNDI inicial,
-# onde estão criadas as connection factories, queues e topics.
+# Cenario de configuracao do cliente JMS, quando sao informadas as propriedades de ambiente
+# para conexao com o servidor de aplicacoes e a inicializacao do contexto JNDI inicial,
+# onde estao criadas as connection factories, queues e topics.
 #
 describe Sparrow::JMS::Connection::Client, ', quando esta sendo configurado,' do
 
@@ -45,8 +45,8 @@ describe Sparrow::JMS::Connection::Client, ', quando esta sendo configurado,' do
 end
 
 #
-# Cenário pós-configuração do cliente JMS, quando as queues e os tópicos já devem estar
-# disponíveis, e então é possível obter sender/receiver para elas.
+# Cenario pos-configuracao do cliente JMS, quando as queues e os topicos ja devem estar
+# disponiveis, e entao e possivel obter sender/receiver para elas.
 #
 describe Sparrow::JMS::Connection::Client, ', depois de ter sido configurado,' do
 

@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.dirname(File.expand_path(__FILE__)))
 
-# Bibliotecas Java necessárias
+# Bibliotecas Java necessarias
 require 'jee.rb'
 
 # Bibliotecas sparrow

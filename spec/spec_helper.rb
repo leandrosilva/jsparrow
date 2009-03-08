@@ -4,12 +4,12 @@ require 'spec'
 require File.dirname(File.expand_path(__FILE__)) + '/../lib/sparrow.rb'
 
 #
-# Módulo com métodos uteis para as propertiess.
+# Modulo com metodos uteis para as propertiess.
 #
 module SparrowHelperMethods
 
   #
-  # Apenas cria, mas não faz o setup do cliente JMS.
+  # Apenas cria, mas nao faz o setup do cliente JMS.
   #
   def create_jms_client
     jms_client = Sparrow::JMS::Connection::Client.new do |properties|
