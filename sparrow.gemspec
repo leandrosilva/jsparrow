@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name = %q{sparrow}
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Leandro Silva"]
-  s.date = %q{2009-03-07}
+  s.date = %q{2009-03-08}
   s.email = %q{leandrodoze@gmail.com}
   s.extra_rdoc_files = ["README.rdoc", "LICENSE"]
   s.files = ["LICENSE", "VERSION.yml", "README.rdoc", "Rakefile", "lib/jee.rb", "lib/utils.rb", "lib/sparrow.rb", "lib/messaging.rb", "lib/connection.rb", "lib/jee", "lib/jee/sparrow-essential.jar", "lib/jee/jms.jar", "lib/jee/javaee-1.5.jar", "spec/spec_helper.rb", "spec/messaging_spec.rb", "spec/connection_spec.rb"]
