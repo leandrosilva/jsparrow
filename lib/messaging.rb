@@ -3,7 +3,7 @@ import 'javax.jms.Session'
 import 'javax.jms.MessageListener'
 
 module Sparrow
-  module JMS
+  module JMSg
     module Messaging
 
       #
@@ -197,7 +197,7 @@ module Sparrow
         
         #
         # E executado todas as vezes que chega uma mensagem que atenda aos criterios
-        # definido para este listener (na variavel de instância @criteria).
+        # definido para este listener (na variavel de instancia @criteria).
         #
         # Invariavelmente deve ser re-implementado nas subclasses.
         #

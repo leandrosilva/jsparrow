@@ -49,7 +49,7 @@ module Sparrow
     
       #
       # Cliente JMS que possibilita a conexao com o servidor de aplicacoes Java EE
-      # que provê o serviço JMS.
+      # que prove o servico JMS.
       #
       class Client
         attr_reader :properties
@@ -65,7 +65,7 @@ module Sparrow
             raise ClientInitializationError.new(@properties, cause)
           end
           
-          # Conexões, filas, tópicos, senders e receivers que serao habilitados
+          # Conexoes, filas, topicos, senders e receivers que serao habilitados
           @connection_factories = {}
           @queues               = {}
           @queue_senders        = {}
