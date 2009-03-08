@@ -4,7 +4,7 @@ Sparrow is a JMS client (JRuby based).
 
 === Install
 
-Add Github as a source for your gem:
+Add Github as a source for your RubyGem:
 
   gem sources -a http://gems.github.com
 
@@ -14,9 +14,9 @@ Make install:
 
 === Example
 
-===== Three steps to send and receive JMS from a Java EE application server.
+===== Three steps to send and receive JMS messages to/from a Java EE application server.
 
-1) Require the gems
+1) Create my_sparrow_test.rb file and require the gems
 
   require 'rubygems'
   require 'sparrow'
