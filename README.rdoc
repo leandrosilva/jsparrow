@@ -8,36 +8,36 @@ Two steps to send and receive JMS from a Java EE application server.
 
 # 1) Create and setup a sparrow JMS client:
 
-jms_client = Sparrow::JMS::Connection::Client.new do |properties|
-  properties.client_jar_file         = '/oc4j_extended_101330/j2ee/home/oc4jclient.jar'
-  properties.initial_context_factory = 'oracle.j2ee.naming.ApplicationClientInitialContextFactory'
-  properties.provider_url            = 'ormi://localhost:23791'
-  properties.security_principal      = 'oc4jadmin'
-  properties.security_credentials    = 'welcome'
-end
+  jms_client = Sparrow::JMS::Connection::Client.new do |properties|
+    properties.client_jar_file         = '/oc4j_extended_101330/j2ee/home/oc4jclient.jar'
+    properties.initial_context_factory = 'oracle.j2ee.naming.ApplicationClientInitialContextFactory'
+    properties.provider_url            = 'ormi://localhost:23791'
+    properties.security_principal      = 'oc4jadmin'
+    properties.security_credentials    = 'welcome'
+  end
 
-jms_client.enable_connection_factories(
-    :queue_connection_factory => 'jms/MyQueueCF'
-  )
-  
-jms_client.enable_queues(
-    :my_queue => 'jms/MyQueue'
-  )
+  jms_client.enable_connection_factories(
+      :queue_connection_factory => 'jms/MyQueueCF'
+    )
+    
+  jms_client.enable_queues(
+      :my_queue => 'jms/MyQueue'
+    )
 
 # 2) OK! You can send and receive messages right now!
 
-jms_client.queue_sender(:my_queue).send_text_message('sparrow rocks!') do |msg|
-  msg.set_string_property('recipient', 'sparrow-example')
-end
+  jms_client.queue_sender(:my_queue).send_text_message('sparrow rocks!') do |msg|
+    msg.set_string_property('recipient', 'sparrow-example')
+  end
 
-jms_client.queue_receiver(:my_queue).receive_message(
-    :timeout  => 5000,
-    :selector => "recipient = 'sparrow-example'"
-  ) do |msg|
-  
-  puts msg.is_text_message?    # true
-  puts msg.text                # sparrow rocks!
-end
+  jms_client.queue_receiver(:my_queue).receive_message(
+      :timeout  => 5000,
+      :selector => "recipient = 'sparrow-example'"
+    ) do |msg|
+    
+    puts msg.is_text_message?    # true
+    puts msg.text                # sparrow rocks!
+  end
 
 == Copyright
 
