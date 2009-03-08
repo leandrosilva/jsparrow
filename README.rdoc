@@ -16,6 +16,8 @@ Make install:
 
 ===== Three steps to send and receive JMS messages to/from a Java EE application server.
 
+WARNING: OC4J will be used as Java EE application server, but any other could be used with no problems.
+
 1) Create my_sparrow_test.rb file and require the gems
 
   require 'rubygems'
