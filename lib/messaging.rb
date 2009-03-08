@@ -3,7 +3,7 @@ import 'javax.jms.Session'
 import 'javax.jms.MessageListener'
 
 module Sparrow
-  module JMSg
+  module JMS
     module Messaging
 
       #
