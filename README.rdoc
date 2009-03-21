@@ -1,6 +1,6 @@
 = sparrow
 
-Sparrow is a JMS client based on JRuby based.
+Sparrow is a JMS client based on JRuby.
 
 === Install
 
