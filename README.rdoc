@@ -4,13 +4,11 @@ Sparrow is a JMS client based on JRuby.
 
 === Install
 
-Add Github as a source for your RubyGem:
+Make gem install:
 
-  gem sources -s http://gemcutter.org
+  sudo gem install sparrow -s http://gemcutter.org
 
-Make install:
-
-  sudo gem install leandrosilva-sparrow
+WARNING: Unavailable for now, because already have a gem named sparrow.
 
 === Example
 
