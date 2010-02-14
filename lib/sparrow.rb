@@ -6,4 +6,4 @@ require 'jee.rb'
 # Bibliotecas sparrow
 require 'connection.rb'
 require 'messaging.rb'
-require 'utils.rb'
+require 'error.rb'

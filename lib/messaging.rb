@@ -216,12 +216,12 @@ module Sparrow
         
         #
         # E executado todas as vezes que chega uma mensagem que atenda aos criterios
-        # definido para este listener (na variavel de instancia @criteria).
+        # definido para este listener (na variavel de instancia @criteria_for_receiving).
         #
         # Invariavelmente deve ser re-implementado nas subclasses.
         #
         def on_receive_message(received_message)
-          raise Utils::Exception::AbstractMethodError.new('on_receive_message')
+          raise Error::AbstractMethodError.new('on_receive_message')
         end
       end
     end

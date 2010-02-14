@@ -13,7 +13,7 @@ describe Sparrow::JMS::Connection::Client, ', quando esta sendo configurado,' do
   
   it 'deveria permitir habilitar uma connection factory especifica para queues' do
     @jms_client.enable_connection_factories(
-        :queue_connection_factory => 'jms/PardalQCF'
+        :queue_connection_factory => 'ConnectionFactory'
       )
 
     @jms_client.queue_connection_factory.should_not be nil
@@ -21,7 +21,7 @@ describe Sparrow::JMS::Connection::Client, ', quando esta sendo configurado,' do
   
   it 'deveria permitir habilitar uma connection factory especifica para topics' do
     @jms_client.enable_connection_factories(
-        :topic_connection_factory => 'jms/PardalTCF'
+        :topic_connection_factory => 'ConnectionFactory'
       )
 
     @jms_client.topic_connection_factory.should_not be nil
@@ -29,7 +29,7 @@ describe Sparrow::JMS::Connection::Client, ', quando esta sendo configurado,' do
   
   it 'deveria permitir habilitar uma Queue especifica' do
     @jms_client.enable_queues(
-        :pardal_queue => 'jms/PardalQueue'
+        :pardal_queue => 'PardalQueue'
       )
 
     @jms_client.queue_enabled?(:pardal_queue).should eql true
@@ -37,7 +37,7 @@ describe Sparrow::JMS::Connection::Client, ', quando esta sendo configurado,' do
   
   it 'deveria permitir habilitar um Topic especifico' do
     @jms_client.enable_topics(
-        :pardal_topic => 'jms/PardalTopic'
+        :pardal_topic => 'PardalTopic'
       )
 
     @jms_client.topic_enabled?(:pardal_topic).should eql true

@@ -11,16 +11,16 @@ module SparrowHelperMethods
   #
   # Apenas cria, mas nao faz o setup do cliente JMS.
   #
-  # WARNING: OC4J will be used as Java EE application server, but any other could
+  # WARNING: OpenJMS will be used as JMS middleware, but any other could
   # be used with no problems.
   #
   def create_jms_client
     jms_client = Sparrow::JMS::Connection::Client.new do |properties|
-      properties.client_jar_file         = '/home/leandro/Desenvolvimento/java/servers/oc4j_extended_101330/j2ee/home/oc4jclient.jar'
-      properties.initial_context_factory = 'oracle.j2ee.naming.ApplicationClientInitialContextFactory'
-      properties.provider_url            = 'ormi://localhost:23791'
-      properties.security_principal      = 'oc4jadmin'
-      properties.security_credentials    = 'welcome'
+      properties.client_jar_file         = '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
+      properties.initial_context_factory = 'org.exolab.jms.jndi.InitialContextFactory'
+      properties.provider_url            = 'tcp://localhost:3035'
+      # properties.security_principal    = ''
+      # properties.security_credentials  = ''
     end
   end
   
@@ -32,16 +32,16 @@ module SparrowHelperMethods
     jms_client = create_jms_client
 
     jms_client.enable_connection_factories(
-        :queue_connection_factory => 'jms/PardalQCF',
-        :topic_connection_factory => 'jms/PardalTCF'
+        :queue_connection_factory => 'ConnectionFactory',
+        :topic_connection_factory => 'ConnectionFactory'
       )
       
     jms_client.enable_queues(
-        :pardal_queue => 'jms/PardalQueue'
+        :pardal_queue => 'PardalQueue'
       )
       
     jms_client.enable_topics(
-        :pardal_topic => 'jms/PardalTopic'
+        :pardal_topic => 'PardalTopic'
       )
     
     # Pronto para ser usado!

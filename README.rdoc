@@ -6,7 +6,7 @@ Sparrow is a JMS client based on JRuby.
 
 Add Github as a source for your RubyGem:
 
-  gem sources -a http://gems.github.com
+  gem sources -s http://gemcutter.org
 
 Make install:
 
@@ -16,7 +16,7 @@ Make install:
 
 ===== Three steps to send and receive JMS messages to/from a Java EE application server.
 
-WARNING: OC4J will be used as Java EE application server, but any other could be used with no problems.
+WARNING: OpenJMS will be used as JMS middleware, but any other could be used with no problems.
 
 1) Create my_sparrow_test.rb file and require the gems
 
@@ -26,19 +26,19 @@ WARNING: OC4J will be used as Java EE application server, but any other could be
 2) Create and setup a sparrow JMS client
 
   jms_client = Sparrow::JMS::Connection::Client.new do |properties|
-    properties.client_jar_file         = '/oc4j_extended_101330/j2ee/home/oc4jclient.jar'
-    properties.initial_context_factory = 'oracle.j2ee.naming.ApplicationClientInitialContextFactory'
-    properties.provider_url            = 'ormi://localhost:23791'
-    properties.security_principal      = 'oc4jadmin'
-    properties.security_credentials    = 'welcome'
+	  properties.client_jar_file         = '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
+	  properties.initial_context_factory = 'org.exolab.jms.jndi.InitialContextFactory'
+	  properties.provider_url            = 'tcp://localhost:3035'
+	  # properties.security_principal    = ''
+	  # properties.security_credentials  = ''
   end
 
   jms_client.enable_connection_factories(
-      :queue_connection_factory => 'jms/MyQueueCF'
+      :queue_connection_factory => 'ConnectionFactory'
     )
     
   jms_client.enable_queues(
-      :my_queue => 'jms/MyQueue'
+      :my_queue => 'MyQueue'
     )
 
 3) OK! You can send and receive messages right now!
@@ -56,7 +56,7 @@ WARNING: OC4J will be used as Java EE application server, but any other could be
     puts msg.text                # sparrow rocks!
   end
 
-So, now start the OC4J server, create the connection factory (jms/MyQueueCF) and queue (jms/MyQueue), and run above script:
+So, now start the OC4J server, create the connection factory (ConnectionFactory) and queue (MyQueue), and run above script:
 
   jruby my_sparrow_test.rb
 

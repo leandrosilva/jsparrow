@@ -28,10 +28,10 @@ module Sparrow
             InitialContext::PROVIDER_URL, @provider_url)
               
           jndi_env.put(
-            InitialContext::SECURITY_PRINCIPAL, @security_principal)
+            InitialContext::SECURITY_PRINCIPAL, @security_principal) if @security_principal
               
           jndi_env.put(
-            InitialContext::SECURITY_CREDENTIALS, @security_credentials)
+            InitialContext::SECURITY_CREDENTIALS, @security_credentials) if @security_credentials
           
           jndi_env
         end
