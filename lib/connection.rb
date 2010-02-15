@@ -27,15 +27,7 @@ module Sparrow
     def self.new_client
       jndi_context_builder = JNDI::ContextBuilder.new(@@configuration.jms_client_jar, @@configuration.jndi_properties)
       
-      client = Client.new(@@configuration, jndi_context_builder)
-      client.enable_connection_factories(@@configuration.enabled_connection_factories || {})
-      client.enable_queues(@@configuration.enabled_queues || {})
-      client.enable_topics(@@configuration.enabled_topics || {})
-      
-      # isso aqui nao ta legal => preciso tirar esses enable_xxx do client
-      # tem que ser injetado pela conexao
-      
-      client
+      Client.new(@@configuration, jndi_context_builder)
     end
 
     #
@@ -50,20 +42,20 @@ module Sparrow
         @jms_client_jar = client_jar
       end
       
-      def use_jndi_properties(properties = {})
-        @jndi_properties = properties
+      def use_jndi_properties(jndi_properties = {})
+        @jndi_properties = jndi_properties
       end
       
-      def enable_connection_factories(connection_factories = {})
-        @enabled_connection_factories = connection_factories
+      def enable_connection_factories(jndi_names = {})
+        @enabled_connection_factories = jndi_names
       end
       
-      def enable_queues(queues = {})
-        @enabled_queues = queues
+      def enable_queues(jndi_names = {})
+        @enabled_queues = jndi_names
       end
       
-      def enable_topics(topics = {})
-        @enabled_topics = topics
+      def enable_topics(jndi_names = {})
+        @enabled_topics = jndi_names
       end
     end
 
@@ -73,26 +65,48 @@ module Sparrow
     #
     class Client
       def initialize(configuration, jndi_context_builder)
+        @configuration        = configuration
+        @jndi_context_builder = jndi_context_builder
+        
+        @jndi_name_of_connection_factories = @configuration.enabled_connection_factories
+        @jndi_name_of_enabled_queues       = {}
+        @jndi_name_of_enabled_topics       = {}
+
+        # Conexoes, filas, topicos, senders e receivers que serao habilitados
+        @connection_factories               = {}
+        @queues                             = {}
+        @queue_senders                      = {}
+        @queue_receivers                    = {}
+        @topics                             = {}
+        @topic_senders                      = {}
+        @topic_receivers                    = {}
+
+        # Foi startado?
+        @started = false
+      end
+      
+      def is_started?
+        @started
+      end
+      
+      def start
         begin
-          @jndi_context = jndi_context_builder.build
+          @jndi_context = @jndi_context_builder.build
         rescue => cause
-          raise ClientInitializationError.new(configuration, cause)
+          raise ClientInitializationError.new(@configuration, cause)
         end
         
-        # Conexoes, filas, topicos, senders e receivers que serao habilitados
-        @connection_factories = {}
-        @queues               = {}
-        @queue_senders        = {}
-        @queue_receivers      = {}
-        @topics               = {}
-        @topic_senders        = {}
-        @topic_receivers      = {}
+        @connection_factories = lookup_connection_factories(@jndi_name_of_connection_factories)
+        @queues               = lookup_queues(@jndi_name_of_enabled_queues)
+        @topics               = lookup_topics(@jndi_name_of_enabled_topics)
       end
-
-      def enable_connection_factories(jndi_names={})
-        jndi_names.each_pair do |key, jndi_name|
-          @connection_factories[key] = @jndi_context.lookup(jndi_name)
-        end
+      
+      def is_stoped?
+        !@started
+      end
+      
+      def stop
+        @jndi_context.close
       end
 
       def queue_connection_factory
@@ -103,14 +117,12 @@ module Sparrow
         @connection_factories[:topic_connection_factory]
       end
 
-      def enable_queues(jndi_names={})
-        jndi_names.each do |key, jndi_name|
-          @queues[key] = @jndi_context.lookup(jndi_name)
-        end
+      def enable_queues(jndi_names = {})
+        @jndi_name_of_enabled_queues = jndi_names
       end
       
       def queue_enabled?(queue_name)
-        @queues.include?(queue_name)
+        @jndi_name_of_enabled_queues.include?(queue_name)
       end
       
       def queue(queue_name)
@@ -129,14 +141,12 @@ module Sparrow
             Messaging::Receiver.new(queue_connection_factory, queue(queue_name))
       end
 
-      def enable_topics(jndi_names={})
-        jndi_names.each do |key, jndi_name|
-          @topics[key] = @jndi_context.lookup(jndi_name)
-        end
+      def enable_topics(jndi_names = {})
+        @jndi_name_of_enabled_topics = jndi_names
       end
       
       def topic_enabled?(topic_name)
-        @topics.include?(topic_name)
+        @jndi_name_of_enabled_topics.include?(topic_name)
       end
       
       def topic(topic_name)
@@ -154,6 +164,39 @@ module Sparrow
         @topic_receivers[topic_name] ||=
             Messaging::Receiver.new(topic_connection_factory, topic(topic_name))
       end
+      
+      # -- Private methods -- #
+      private
+      
+        def lookup_connection_factories(jndi_names = {})
+          lookuped_connection_factories = {}
+          
+          jndi_names.each_pair do |key, jndi_name|
+            lookuped_connection_factories[key] = @jndi_context.lookup(jndi_name)
+          end
+          
+          lookuped_connection_factories
+        end
+
+        def lookup_queues(jndi_names = {})
+          lookuped_queues = {}
+          
+          jndi_names.each do |key, jndi_name|
+            lookuped_queues[key] = @jndi_context.lookup(jndi_name)
+          end
+          
+          lookuped_queues
+        end
+
+        def lookup_topics(jndi_names = {})
+          lookuped_topics = {}
+          
+          jndi_names.each do |key, jndi_name|
+            lookuped_topics[key] = @jndi_context.lookup(jndi_name)
+          end
+          
+          lookuped_topics
+        end
     end
     
     class ClientInitializationError < StandardError

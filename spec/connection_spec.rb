@@ -9,36 +9,29 @@ describe Sparrow::Connection::Client, ', quando esta sendo configurado,' do
 
   before(:all) do
     @jms_client = create_jms_client
+    @jms_client.start
   end
   
-  it 'deveria permitir habilitar uma connection factory especifica para queues' do
-    @jms_client.enable_connection_factories(
-        :queue_connection_factory => 'ConnectionFactory'
-      )
-
+  after(:all) do
+    @jms_client.stop
+  end
+  
+  it 'deveria ter uma connection factory especifica para queues' do
     @jms_client.queue_connection_factory.should_not be nil
   end
   
-  it 'deveria permitir habilitar uma connection factory especifica para topics' do
-    @jms_client.enable_connection_factories(
-        :topic_connection_factory => 'ConnectionFactory'
-      )
-
+  it 'deveria ter uma connection factory especifica para topics' do
     @jms_client.topic_connection_factory.should_not be nil
   end
   
   it 'deveria permitir habilitar uma Queue especifica' do
-    @jms_client.enable_queues(
-        :pardal_queue => 'PardalQueue'
-      )
+    @jms_client.enable_queues :pardal_queue => 'PardalQueue'
 
     @jms_client.queue_enabled?(:pardal_queue).should eql true
   end
   
   it 'deveria permitir habilitar um Topic especifico' do
-    @jms_client.enable_topics(
-        :pardal_topic => 'PardalTopic'
-      )
+    @jms_client.enable_topics :pardal_topic => 'PardalTopic'
 
     @jms_client.topic_enabled?(:pardal_topic).should eql true
   end  
@@ -52,6 +45,11 @@ describe Sparrow::Connection::Client, ', depois de ter sido configurado,' do
 
   before(:all) do
     @jms_client = create_and_setup_jms_client
+    @jms_client.start
+  end
+  
+  after(:all) do
+    @jms_client.stop
   end
   
   it 'deveria possibilitar obter um Sender para uma Queue especifica' do
