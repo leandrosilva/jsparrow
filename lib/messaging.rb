@@ -1,4 +1,4 @@
-# Classes java usadas nesse arquivo
+# Classes Java usadas nesse arquivo
 import 'javax.jms.Session'
 import 'javax.jms.MessageListener'
 

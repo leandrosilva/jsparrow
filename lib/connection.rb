@@ -1,4 +1,4 @@
-# Classes java usadas nesse arquivo
+# Classes Java usadas nesse arquivo
 import 'java.util.Hashtable'
 import 'javax.naming.InitialContext'
 
@@ -6,62 +6,74 @@ module Sparrow
   module Connection
 
     #
-    # Configuracoes necessarias para que clientes JMS se conectem
-    # ao servidor de aplicacoes Java EE via JNDI Context.
+    # Metodo usado para configurar a conexao com o middleware de JMS.
     #
-    class Properties
-      attr_accessor :client_jar_file,
-                    :initial_context_factory, :provider_url,
-                    :security_principal, :security_credentials
+    def self.configure
+      @@configuration = Configuration.new
       
-      #
-      # Cria um Hashtable Java contendo as configuracoes atuais.
-      #
-      def to_jndi_environment_hashtable
-        jndi_env = Hashtable.new
-        
-        jndi_env.put(
-          InitialContext::INITIAL_CONTEXT_FACTORY, @initial_context_factory)
-            
-        jndi_env.put(
-          InitialContext::PROVIDER_URL, @provider_url)
-            
-        jndi_env.put(
-          InitialContext::SECURITY_PRINCIPAL, @security_principal) if @security_principal
-            
-        jndi_env.put(
-          InitialContext::SECURITY_CREDENTIALS, @security_credentials) if @security_credentials
-        
-        jndi_env
+      yield @@configuration
+    end
+    
+    #
+    # Metodo usado para obter a configuracao para conexao com o middleware de JMS.
+    #
+    def self.configuration
+      @@configuration
+    end
+    
+    #
+    # Metodo usado para criar um novo Client JMS.
+    #
+    def self.new_client
+      jndi_context_builder = JNDI::ContextBuilder.new(@@configuration.middleware_client, @@configuration.jndi_properties)
+      
+      client = Client.new(@@configuration, jndi_context_builder)
+      client.enable_connection_factories(@@configuration.enabled_connection_factories)
+      client.enable_queues(@@configuration.enabled_queues)
+      client.enable_topics(@@configuration.enabled_topics)
+      
+      client
+    end
+
+    #
+    # Configuracoes necessarias para que clientes JMS se conetem
+    # ao middleware de mensageria via contexto JNDI.
+    #
+    class Configuration
+      attr_reader :middleware_client, :jndi_properties
+      attr_reader :enabled_connection_factories, :enabled_queues, :enabled_topics
+      
+      def use_middleware_client(client_jar)
+        @middleware_client = client_jar
       end
       
-      #
-      # Constroi um contexto JNDI inicial a partir das configuracoes atuais.
-      #
-      def build_jndi_context
-          # Carrega a biblioteca cliente do servidor de aplicacoes
-          require @client_jar_file
-          
-          InitialContext.new(to_jndi_environment_hashtable)
+      def use_jndi_properties(properties = {})
+        @jndi_properties = properties
+      end
+      
+      def enable_connection_factories(connection_factories = {})
+        @enabled_connection_factories = connection_factories
+      end
+      
+      def enable_queues(queues = {})
+        @enabled_queues = queues
+      end
+      
+      def enable_topics(topics = {})
+        @enabled_topics = topics
       end
     end
-  
+
     #
     # Cliente JMS que possibilita a conexao com o servidor de aplicacoes Java EE
     # que prove o servico JMS.
     #
     class Client
-      attr_reader :properties
-      
-      def initialize(&configurator)
-        @properties = Properties.new
-        
+      def initialize(configuration, jndi_context_builder)
         begin
-          configurator.call(@properties)
-        
-          @jndi_context = properties.build_jndi_context
+          @jndi_context = jndi_context_builder.build
         rescue => cause
-          raise ClientInitializationError.new(@properties, cause)
+          raise ClientInitializationError.new(configuration, cause)
         end
         
         # Conexoes, filas, topicos, senders e receivers que serao habilitados
@@ -148,8 +160,62 @@ module Sparrow
         super("Could not open connection to the server. Verify the properties's properties.")
         
         @properties = properties
-        @cause         = cause
+        @cause      = cause
       end
+    end
+  end
+  
+  module JNDI
+    
+    #
+    # Builder para construcao de contexto JNDI para conexao com o middleware
+    # de mensageria.
+    #
+    class ContextBuilder
+      attr_accessor :middleware_client, :jndi_properties
+      
+      def initialize(middleware_client, jndi_properties)
+        @middleware_client = middleware_client
+        @jndi_properties   = jndi_properties
+      end
+      
+      #
+      # Constroi um contexto JNDI inicial a partir das configuracoes atuais.
+      #
+      def build
+          # Carrega a biblioteca cliente do servidor de aplicacoes
+          require @middleware_client
+          
+          InitialContext.new(to_jndi_environment_hashtable)
+      end
+
+      # --- Private methods --- #
+      private
+
+        #
+        # Cria um Hashtable Java contendo as configuracoes atuais.
+        #
+        def to_jndi_environment_hashtable
+          jndi_env = Hashtable.new
+        
+          jndi_env.put(
+            InitialContext::INITIAL_CONTEXT_FACTORY,
+            @jndi_properties[:initial_context_factory])
+            
+          jndi_env.put(
+            InitialContext::PROVIDER_URL,
+            @jndi_properties[:provider_url])
+            
+          jndi_env.put(
+            InitialContext::SECURITY_PRINCIPAL,
+            @jndi_properties[:security_principal]) if @jndi_properties[:security_principal]
+            
+          jndi_env.put(
+            InitialContext::SECURITY_CREDENTIALS,
+            @jndi_properties[:security_credentials]) if @jndi_properties[:security_credentials]
+        
+          jndi_env
+        end
     end
   end
 end

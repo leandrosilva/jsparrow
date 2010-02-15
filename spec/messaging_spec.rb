@@ -8,7 +8,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queue especifica,' do
   
   before(:all) do
-    jms_client = create_and_setup_jms_client
+    jms_client = create_jms_client
     
     @sender   = jms_client.queue_sender(:pardal_queue)
     @receiver = jms_client.queue_receiver(:pardal_queue)
@@ -125,7 +125,7 @@ describe Sparrow::Messaging::Listener,
          ', quando um Listener se registra para escutar uma Queue especifica,' do
   
   before(:all) do
-    jms_client = create_and_setup_jms_client
+    jms_client = create_jms_client
   end
   
   it 'deveria possibilitar escutar mensagens atraves de um listener'
