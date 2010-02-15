@@ -101,6 +101,8 @@ module Sparrow
         @connection_factories = lookup_connection_factories(@jndi_name_of_connection_factories)
         @queues               = lookup_queues(@jndi_name_of_enabled_queues)
         @topics               = lookup_topics(@jndi_name_of_enabled_topics)
+        
+        @started = true
       end
       
       def is_stoped?
@@ -111,6 +113,8 @@ module Sparrow
         raise StopClientError.new if is_stoped?
         
         @jndi_context.close
+        
+        @started = false
       end
 
       def queue_connection_factory
