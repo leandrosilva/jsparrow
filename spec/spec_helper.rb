@@ -15,7 +15,7 @@ module SparrowHelperMethods
   # be used with no problems.
   #
   def create_jms_client
-    jms_client = Sparrow::JMS::Connection::Client.new do |properties|
+    jms_client = Sparrow::Connection::Client.new do |properties|
       properties.client_jar_file         = '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
       properties.initial_context_factory = 'org.exolab.jms.jndi.InitialContextFactory'
       properties.provider_url            = 'tcp://localhost:3035'

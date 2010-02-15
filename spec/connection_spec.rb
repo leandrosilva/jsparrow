@@ -5,7 +5,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 # para conexao com o servidor de aplicacoes e a inicializacao do contexto JNDI inicial,
 # onde estao criadas as connection factories, queues e topics.
 #
-describe Sparrow::JMS::Connection::Client, ', quando esta sendo configurado,' do
+describe Sparrow::Connection::Client, ', quando esta sendo configurado,' do
 
   before(:all) do
     @jms_client = create_jms_client
@@ -48,7 +48,7 @@ end
 # Cenario pos-configuracao do cliente JMS, quando as queues e os topicos ja devem estar
 # disponiveis, e entao e possivel obter sender/receiver para elas.
 #
-describe Sparrow::JMS::Connection::Client, ', depois de ter sido configurado,' do
+describe Sparrow::Connection::Client, ', depois de ter sido configurado,' do
 
   before(:all) do
     @jms_client = create_and_setup_jms_client

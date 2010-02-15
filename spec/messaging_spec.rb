@@ -5,7 +5,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 # receber mensagens de tres tipos (Texto, Objeto e Mapa) de uma queue especifica,
 # individualmente ou em lote.
 #
-describe Sparrow::JMS::Messaging, ', quando tem um Sender e um Receiver para uma Queue especifica,' do
+describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queue especifica,' do
   
   before(:all) do
     jms_client = create_and_setup_jms_client
@@ -121,7 +121,7 @@ end
 # Cenario pos-configuracao do cliente JMS, quando deve ser possivel escutar mensagens
 # atraves de objetos listeners.
 #
-describe Sparrow::JMS::Messaging::Listener,
+describe Sparrow::Messaging::Listener,
          ', quando um Listener se registra para escutar uma Queue especifica,' do
   
   before(:all) do
