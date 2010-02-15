@@ -90,6 +90,8 @@ module Sparrow
       end
       
       def start
+        raise StartClientError.new if is_started?
+        
         begin
           @jndi_context = @jndi_context_builder.build
         rescue => cause
@@ -106,6 +108,8 @@ module Sparrow
       end
       
       def stop
+        raise StopClientError.new if is_stoped?
+        
         @jndi_context.close
       end
 
@@ -203,10 +207,22 @@ module Sparrow
       attr_reader :properties, :cause
       
       def initialize(properties, cause)
-        super("Could not open connection to the server. Verify the properties's properties.")
+        super("Could not open connection to server. Verify the properties's properties.")
         
         @properties = properties
         @cause      = cause
+      end
+    end
+
+    class StartClientError < StandardError
+      def initialize
+        super("Could not start client because it is already started.")
+      end
+    end
+
+    class StopClientError < StandardError
+      def initialize
+        super("Could not stop client because it is already stoped.")
       end
     end
   end
