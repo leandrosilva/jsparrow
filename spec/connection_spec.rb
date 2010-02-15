@@ -51,7 +51,7 @@ end
 describe Sparrow::Connection::Client, ', depois de ter sido configurado,' do
 
   before(:all) do
-    @jms_client = create_jms_client
+    @jms_client = create_and_setup_jms_client
   end
   
   it 'deveria possibilitar obter um Sender para uma Queue especifica' do

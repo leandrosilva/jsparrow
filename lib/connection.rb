@@ -25,12 +25,15 @@ module Sparrow
     # Metodo usado para criar um novo Client JMS.
     #
     def self.new_client
-      jndi_context_builder = JNDI::ContextBuilder.new(@@configuration.middleware_client, @@configuration.jndi_properties)
+      jndi_context_builder = JNDI::ContextBuilder.new(@@configuration.jms_client_jar, @@configuration.jndi_properties)
       
       client = Client.new(@@configuration, jndi_context_builder)
-      client.enable_connection_factories(@@configuration.enabled_connection_factories)
-      client.enable_queues(@@configuration.enabled_queues)
-      client.enable_topics(@@configuration.enabled_topics)
+      client.enable_connection_factories(@@configuration.enabled_connection_factories || {})
+      client.enable_queues(@@configuration.enabled_queues || {})
+      client.enable_topics(@@configuration.enabled_topics || {})
+      
+      # isso aqui nao ta legal => preciso tirar esses enable_xxx do client
+      # tem que ser injetado pela conexao
       
       client
     end
@@ -40,11 +43,11 @@ module Sparrow
     # ao middleware de mensageria via contexto JNDI.
     #
     class Configuration
-      attr_reader :middleware_client, :jndi_properties
-      attr_reader :enabled_connection_factories, :enabled_queues, :enabled_topics
+      attr_reader :jms_client_jar, :jndi_properties,
+                  :enabled_connection_factories, :enabled_queues, :enabled_topics
       
-      def use_middleware_client(client_jar)
-        @middleware_client = client_jar
+      def use_jms_client_jar(client_jar)
+        @jms_client_jar = client_jar
       end
       
       def use_jndi_properties(properties = {})
@@ -169,13 +172,13 @@ module Sparrow
     
     #
     # Builder para construcao de contexto JNDI para conexao com o middleware
-    # de mensageria.
+    # de JMS.
     #
     class ContextBuilder
-      attr_accessor :middleware_client, :jndi_properties
+      attr_accessor :jms_client_jar, :jndi_properties
       
-      def initialize(middleware_client, jndi_properties)
-        @middleware_client = middleware_client
+      def initialize(jms_client_jar, jndi_properties)
+        @jms_client_jar = jms_client_jar
         @jndi_properties   = jndi_properties
       end
       
@@ -184,7 +187,7 @@ module Sparrow
       #
       def build
           # Carrega a biblioteca cliente do servidor de aplicacoes
-          require @middleware_client
+          require @jms_client_jar
           
           InitialContext.new(to_jndi_environment_hashtable)
       end
