@@ -114,15 +114,15 @@ module Sparrow
         
         @jndi_context.close
         
-        @started = false
+        @started = false  
       end
 
       def queue_connection_factory
-        @connection_factories[:queue_connection_factory]
+        @jndi_name_of_connection_factories[:queue_connection_factory]
       end
 
       def topic_connection_factory
-        @connection_factories[:topic_connection_factory]
+        @jndi_name_of_connection_factories[:topic_connection_factory]
       end
 
       def enable_queues(jndi_names = {})
