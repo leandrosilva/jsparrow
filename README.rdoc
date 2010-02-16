@@ -23,26 +23,26 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
 
 2) Setup indispensable informations to connect your JMS middleware
 
-	Sparrow::Connection.configure do |connection|
-	  connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
+  Sparrow::Connection.configure do |connection|
+    connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
 
-	  connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
-	                                 :provider_url            => 'tcp://localhost:3035'
-	                               # :security_principal      => 'user',
-	                               # :security_credentials    => 'password'
+    connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
+                                   :provider_url            => 'tcp://localhost:3035'
+                                 # :security_principal      => 'user',
+                                 # :security_credentials    => 'password'
 
-	  connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
-	                                         :topic_connection_factory => 'ConnectionFactory'
-	end
+    connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
+                                           :topic_connection_factory => 'ConnectionFactory'
+  end
 
 3) Create the client and setup a queue
 
-	jms_client = Sparrow::Connection.new_client
-	jms_client.enable_queues :pardal_queue => 'MyQueue'
-	
+  jms_client = Sparrow::Connection.new_client
+  jms_client.enable_queues :pardal_queue => 'MyQueue'
+  
 4) After appropriate setup, start the client
 
-	jms_client.start
+  jms_client.start
 
 5) OK! Now you can send and receive messages right now!
 
@@ -61,7 +61,7 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
 
 6) After you receive your amazing messages, stop the client
 
-	jms_client.stop
+  jms_client.stop
 
 So, now that you did code and save it, start the OpenJMS server, create the queue (MyQueue), and run above script:
 
