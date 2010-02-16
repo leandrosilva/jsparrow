@@ -5,7 +5,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "jsparrow"
-    gem.summary = %Q{JSparrow is a JMS client based on JRuby}
+    gem.summary = "JSparrow is a JMS client based on JRuby"
     gem.email = "leandrodoze@gmail.com"
     gem.homepage = "http://github.com/leandrosilva/jsparrow"
     gem.authors = ["Leandro Silva"]
