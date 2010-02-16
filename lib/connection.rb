@@ -9,32 +9,32 @@ module JSparrow
     # Metodo usado para configurar a conexao com o middleware de JMS.
     #
     def self.configure
-      @@properties = ConnectionProperties.new
+      @@spec = ConnectionSpec.new
       
-      yield @@properties
+      yield @@spec
     end
     
     #
     # Metodo usado para obter a configuracao para conexao com o middleware de JMS.
     #
-    def self.connection_properties
-      @@properties
+    def self.connection_spec
+      @@spec
     end
     
     #
     # Metodo usado para criar um novo Client JMS.
     #
     def self.new_client
-      jndi_context_builder = JNDI::ContextBuilder.new(@@properties.jms_client_jar, @@properties.jndi_properties)
+      jndi_context_builder = JNDI::ContextBuilder.new(@@spec.jms_client_jar, @@spec.jndi_properties)
       
-      Client.new(@@properties, jndi_context_builder)
+      Client.new(@@spec, jndi_context_builder)
     end
 
     #
     # Configuracoes necessarias para que clientes JMS se conetem
     # ao middleware de mensageria via contexto JNDI.
     #
-    class ConnectionProperties
+    class ConnectionSpec
       attr_reader :jms_client_jar, :jndi_properties,
                   :enabled_connection_factories, :enabled_queues, :enabled_topics
       
@@ -64,24 +64,25 @@ module JSparrow
     # que prove o servico JMS.
     #
     class Client
-      def initialize(connection_properties, jndi_context_builder)
-        @connection_properties = connection_properties
-        @jndi_context_builder  = jndi_context_builder
+      def initialize(connection_spec, jndi_context_builder)
+        @connection_spec      = connection_spec
+        @jndi_context_builder = jndi_context_builder
         
-        @jndi_name_of_enabled_connection_factories = @connection_properties.enabled_connection_factories
-        @jndi_name_of_enabled_queues               = {}
-        @jndi_name_of_enabled_topics               = {}
+        # Nomes JNDI dos recursos habilitados
+        @jndi_name_of_connection_factories = @connection_spec.enabled_connection_factories
+        @jndi_name_of_queues               = {}
+        @jndi_name_of_topics               = {}
 
         # Conexoes, filas, topicos, senders e receivers que serao habilitados
-        @connection_factories               = {}
-        @queues                             = {}
-        @queue_senders                      = {}
-        @queue_receivers                    = {}
-        @topics                             = {}
-        @topic_senders                      = {}
-        @topic_receivers                    = {}
+        @connection_factories = {}
+        @queues               = {}
+        @queue_senders        = {}
+        @queue_receivers      = {}
+        @topics               = {}
+        @topic_senders        = {}
+        @topic_receivers      = {}
 
-        # Foi startado?
+        # Foi iniciado?
         @started = false
       end
       
@@ -95,12 +96,12 @@ module JSparrow
         begin
           @jndi_context = @jndi_context_builder.build
         rescue => cause
-          raise ClientInitializationError.new(@connection_properties, cause)
+          raise ClientInitializationError.new(@connection_spec, cause)
         end
         
-        @connection_factories = lookup_resource(@jndi_name_of_enabled_connection_factories)
-        @queues               = lookup_resource(@jndi_name_of_enabled_queues)
-        @topics               = lookup_resource(@jndi_name_of_enabled_topics)
+        @connection_factories = lookup_resource(@jndi_name_of_connection_factories)
+        @queues               = lookup_resource(@jndi_name_of_queues)
+        @topics               = lookup_resource(@jndi_name_of_topics)
         
         @started = true
       end
@@ -118,7 +119,7 @@ module JSparrow
       end
 
       def queue_connection_factory_enabled?
-        @jndi_name_of_enabled_connection_factories.include?(:queue_connection_factory)
+        @jndi_name_of_connection_factories.include?(:queue_connection_factory)
       end
 
       def queue_connection_factory
@@ -126,7 +127,7 @@ module JSparrow
       end
 
       def topic_connection_factory_enabled?
-        @jndi_name_of_enabled_connection_factories.include?(:topic_connection_factory)
+        @jndi_name_of_connection_factories.include?(:topic_connection_factory)
       end
 
       def topic_connection_factory
@@ -136,11 +137,11 @@ module JSparrow
       def enable_queues(jndi_names = {})
         raise InvalidClientStateError.new('started', 'enable_queues') if is_started?
         
-        @jndi_name_of_enabled_queues = jndi_names
+        @jndi_name_of_queues = jndi_names
       end
       
       def queue_enabled?(queue_name)
-        @jndi_name_of_enabled_queues.include?(queue_name)
+        @jndi_name_of_queues.include?(queue_name)
       end
       
       def queue(queue_name)
@@ -162,11 +163,11 @@ module JSparrow
       def enable_topics(jndi_names = {})
         raise InvalidClientStateError.new('started', 'enable_topics') if is_started?
         
-        @jndi_name_of_enabled_topics = jndi_names
+        @jndi_name_of_topics = jndi_names
       end
       
       def topic_enabled?(topic_name)
-        @jndi_name_of_enabled_topics.include?(topic_name)
+        @jndi_name_of_topics.include?(topic_name)
       end
       
       def topic(topic_name)
@@ -200,12 +201,12 @@ module JSparrow
     end
     
     class ClientInitializationError < StandardError
-      attr_reader :properties, :cause
+      attr_reader :spec, :cause
       
-      def initialize(properties, cause)
-        super("Could not open connection to server. Verify the properties's properties.")
+      def initialize(spec, cause)
+        super("Could not open connection to server. Verify the spec's spec.")
         
-        @properties = properties
+        @spec = spec
         @cause      = cause
       end
     end
@@ -232,8 +233,8 @@ module JSparrow
       attr_accessor :jms_client_jar, :jndi_properties
       
       def initialize(jms_client_jar, jndi_properties)
-        @jms_client_jar = jms_client_jar
-        @jndi_properties   = jndi_properties
+        @jms_client_jar  = jms_client_jar
+        @jndi_properties = jndi_properties
       end
       
       #
