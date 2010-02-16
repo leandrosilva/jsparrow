@@ -9,32 +9,32 @@ module Sparrow
     # Metodo usado para configurar a conexao com o middleware de JMS.
     #
     def self.configure
-      @@configuration = Configuration.new
+      @@properties = ConnectionProperties.new
       
-      yield @@configuration
+      yield @@properties
     end
     
     #
     # Metodo usado para obter a configuracao para conexao com o middleware de JMS.
     #
-    def self.configuration
-      @@configuration
+    def self.connection_properties
+      @@properties
     end
     
     #
     # Metodo usado para criar um novo Client JMS.
     #
     def self.new_client
-      jndi_context_builder = JNDI::ContextBuilder.new(@@configuration.jms_client_jar, @@configuration.jndi_properties)
+      jndi_context_builder = JNDI::ContextBuilder.new(@@properties.jms_client_jar, @@properties.jndi_properties)
       
-      Client.new(@@configuration, jndi_context_builder)
+      Client.new(@@properties, jndi_context_builder)
     end
 
     #
     # Configuracoes necessarias para que clientes JMS se conetem
     # ao middleware de mensageria via contexto JNDI.
     #
-    class Configuration
+    class ConnectionProperties
       attr_reader :jms_client_jar, :jndi_properties,
                   :enabled_connection_factories, :enabled_queues, :enabled_topics
       
@@ -64,11 +64,11 @@ module Sparrow
     # que prove o servico JMS.
     #
     class Client
-      def initialize(configuration, jndi_context_builder)
-        @configuration        = configuration
-        @jndi_context_builder = jndi_context_builder
+      def initialize(connection_properties, jndi_context_builder)
+        @connection_properties = connection_properties
+        @jndi_context_builder  = jndi_context_builder
         
-        @jndi_name_of_enabled_connection_factories = @configuration.enabled_connection_factories
+        @jndi_name_of_enabled_connection_factories = @connection_properties.enabled_connection_factories
         @jndi_name_of_enabled_queues               = {}
         @jndi_name_of_enabled_topics               = {}
 
@@ -95,7 +95,7 @@ module Sparrow
         begin
           @jndi_context = @jndi_context_builder.build
         rescue => cause
-          raise ClientInitializationError.new(@configuration, cause)
+          raise ClientInitializationError.new(@connection_properties, cause)
         end
         
         @connection_factories = lookup_resource(@jndi_name_of_enabled_connection_factories)
