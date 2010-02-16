@@ -12,7 +12,7 @@ I'M SORRY! Unavailable for now, because already have a gem named sparrow. I will
 
 === Example
 
-===== Three steps to send and receive JMS messages to/from a Java EE application server.
+===== Three steps to send and receive JMS messages to/from a JMS middleware.
 
 WARNING: OpenJMS will be used as JMS middleware, but any other could be used with no problems.
 
