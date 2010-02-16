@@ -8,7 +8,7 @@ Make gem install:
 
   sudo gem install sparrow -s http://gemcutter.org
 
-WARNING: Unavailable for now, because already have a gem named sparrow.
+I'M SORRY! Unavailable for now, because already have a gem named sparrow. I will change it name.
 
 === Example
 
