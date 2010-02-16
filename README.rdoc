@@ -36,7 +36,7 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
 3) Create the client and setup a queue
 
   jms_client = JSparrow::Connection.new_client
-  jms_client.enable_queues :pardal_queue => 'MyQueue'
+  jms_client.enable_queues :my_queue => 'MyQueue'
   
 4) After appropriate setup, start the client
 
