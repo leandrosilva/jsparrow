@@ -134,6 +134,8 @@ module Sparrow
       end
 
       def enable_queues(jndi_names = {})
+        raise InvalidClientStateError.new(:started, 'enable_queues') if is_started?
+        
         @jndi_name_of_enabled_queues = jndi_names
       end
       
@@ -158,6 +160,8 @@ module Sparrow
       end
 
       def enable_topics(jndi_names = {})
+        raise InvalidClientStateError.new(:started, 'enable_topics') if is_started?
+        
         @jndi_name_of_enabled_topics = jndi_names
       end
       
@@ -215,6 +219,12 @@ module Sparrow
     class StopClientError < StandardError
       def initialize
         super("Could not stop client because it is already stoped.")
+      end
+    end
+    
+    class InvalidClientStateError < StandardError
+      def initialize(state, operation)
+        super("Could not did #{operation} because client is #{state}.")
       end
     end
   end

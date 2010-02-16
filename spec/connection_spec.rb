@@ -74,24 +74,16 @@ describe Sparrow::Connection::Client, ', quando esta sendo configurado,' do
     @jms_client.stop
   end
   
-  it 'deveria ter uma connection factory especifica para queues' do
-    @jms_client.queue_connection_factory.should_not be nil
+  it 'nao deveria permitir habilitar uma Queue especifica' do
+    lambda {
+        @jms_client.enable_queues(:pardal_queue => 'PardalQueue')
+      }.should raise_error Sparrow::Connection::InvalidClientStateError
   end
   
-  it 'deveria ter uma connection factory especifica para topics' do
-    @jms_client.topic_connection_factory.should_not be nil
-  end
-  
-  it 'deveria permitir habilitar uma Queue especifica' do
-    @jms_client.enable_queues :pardal_queue => 'PardalQueue'
-
-    @jms_client.queue_enabled?(:pardal_queue).should eql true
-  end
-  
-  it 'deveria permitir habilitar um Topic especifico' do
-    @jms_client.enable_topics :pardal_topic => 'PardalTopic'
-
-    @jms_client.topic_enabled?(:pardal_topic).should eql true
+  it 'nao deveria permitir habilitar um Topic especifico' do
+    lambda {
+        @jms_client.enable_topics(:pardal_topic => 'PardalTopic')
+      }.should raise_error Sparrow::Connection::InvalidClientStateError
   end  
 end
 
