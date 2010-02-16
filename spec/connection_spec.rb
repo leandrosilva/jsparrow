@@ -63,7 +63,7 @@ end
 # Importante: Como o cliente JMS ja esta iniciado, deve lancar erro, nao permitindo
 #             qualquer configuracao.
 #
-describe Sparrow::Connection::Client, ', quando esta sendo configurado,' do
+describe Sparrow::Connection::Client, ', quando esta sendo configurado, apos iniciado,' do
 
   before(:all) do
     @jms_client = create_jms_client

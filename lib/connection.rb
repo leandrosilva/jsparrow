@@ -90,7 +90,7 @@ module Sparrow
       end
       
       def start
-        raise StartClientError.new if is_started?
+        raise InvalidClientStateError.new('started', 'start') if is_started?
         
         begin
           @jndi_context = @jndi_context_builder.build
@@ -110,7 +110,7 @@ module Sparrow
       end
       
       def stop
-        raise StopClientError.new if is_stoped?
+        raise InvalidClientStateError.new('stoped', 'stop') if is_stoped?
         
         @jndi_context.close
         
@@ -134,7 +134,7 @@ module Sparrow
       end
 
       def enable_queues(jndi_names = {})
-        raise InvalidClientStateError.new(:started, 'enable_queues') if is_started?
+        raise InvalidClientStateError.new('started', 'enable_queues') if is_started?
         
         @jndi_name_of_enabled_queues = jndi_names
       end
@@ -160,7 +160,7 @@ module Sparrow
       end
 
       def enable_topics(jndi_names = {})
-        raise InvalidClientStateError.new(:started, 'enable_topics') if is_started?
+        raise InvalidClientStateError.new('started', 'enable_topics') if is_started?
         
         @jndi_name_of_enabled_topics = jndi_names
       end
@@ -210,21 +210,14 @@ module Sparrow
       end
     end
 
-    class StartClientError < StandardError
-      def initialize
-        super("Could not start client because it is already started.")
-      end
-    end
-
-    class StopClientError < StandardError
-      def initialize
-        super("Could not stop client because it is already stoped.")
-      end
-    end
-    
     class InvalidClientStateError < StandardError
+      attr_reader :state, :operation
+      
       def initialize(state, operation)
         super("Could not did #{operation} because client is #{state}.")
+        
+        @state     = state
+        @operation = operation
       end
     end
   end
