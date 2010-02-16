@@ -9,32 +9,32 @@ module JSparrow
     # Metodo usado para configurar a conexao com o middleware de JMS.
     #
     def self.configure
-      @@spec = ConnectionSpec.new
+      @@config = Configuration.new
       
-      yield @@spec
+      yield @@config
     end
     
     #
     # Metodo usado para obter a configuracao para conexao com o middleware de JMS.
     #
-    def self.connection_spec
-      @@spec
+    def self.configuration
+      @@config
     end
     
     #
     # Metodo usado para criar um novo Client JMS.
     #
     def self.new_client
-      jndi_context_builder = JNDI::ContextBuilder.new(@@spec.jms_client_jar, @@spec.jndi_properties)
+      jndi_context_builder = JNDI::ContextBuilder.new(@@config.jms_client_jar, @@config.jndi_properties)
       
-      Client.new(@@spec, jndi_context_builder)
+      Client.new(@@config, jndi_context_builder)
     end
 
     #
     # Configuracoes necessarias para que clientes JMS se conetem
     # ao middleware de mensageria via contexto JNDI.
     #
-    class ConnectionSpec
+    class Configuration
       attr_reader :jms_client_jar, :jndi_properties,
                   :enabled_connection_factories, :enabled_queues, :enabled_topics
       
@@ -64,12 +64,12 @@ module JSparrow
     # que prove o servico JMS.
     #
     class Client
-      def initialize(connection_spec, jndi_context_builder)
-        @connection_spec      = connection_spec
+      def initialize(connection_config, jndi_context_builder)
+        @connection_config    = connection_config
         @jndi_context_builder = jndi_context_builder
         
         # Nomes JNDI dos recursos habilitados
-        @jndi_name_of_connection_factories = @connection_spec.enabled_connection_factories
+        @jndi_name_of_connection_factories = @connection_config.enabled_connection_factories
         @jndi_name_of_queues               = {}
         @jndi_name_of_topics               = {}
 
@@ -96,7 +96,7 @@ module JSparrow
         begin
           @jndi_context = @jndi_context_builder.build
         rescue => cause
-          raise ClientInitializationError.new(@connection_spec, cause)
+          raise ClientInitializationError.new(@connection_config, cause)
         end
         
         @connection_factories = lookup_resource(@jndi_name_of_connection_factories)
@@ -201,13 +201,13 @@ module JSparrow
     end
     
     class ClientInitializationError < StandardError
-      attr_reader :spec, :cause
+      attr_reader :config, :cause
       
-      def initialize(spec, cause)
-        super("Could not open connection to server. Verify the spec's spec.")
+      def initialize(config, cause)
+        super("Could not open connection to server. Verify the config's config.")
         
-        @spec = spec
-        @cause      = cause
+        @config = config
+        @cause  = cause
       end
     end
 
