@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.date = %q{2009-03-08}
   s.email = %q{leandrodoze@gmail.com}
   s.extra_rdoc_files = ["README.rdoc", "LICENSE"]
-  s.files = ["LICENSE", "VERSION.yml", "README.rdoc", "Rakefile", "lib/jee.rb", "lib/error.rb", "lib/jsparrow.rb", "lib/messaging.rb", "lib/connection.rb", "lib/jee", "lib/jee/jsparrow-essential.jar", "lib/jee/jms.jar", "lib/jee/javaee-1.5.jar", "spec/spec_helper.rb", "spec/messaging_spec.rb", "spec/connection_spec.rb"]
+  s.files = ["LICENSE", "VERSION.yml", "README.rdoc", "Rakefile", "lib/jms.rb", "lib/error.rb", "lib/jsparrow.rb", "lib/messaging.rb", "lib/connection.rb", "lib/jms", "lib/jms/jsparrow-essential.jar", "lib/jms/jms.jar", "lib/jms/javaee-1.5.jar", "spec/spec_helper.rb", "spec/messaging_spec.rb", "spec/connection_spec.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/leandrosilva/jsparrow}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]

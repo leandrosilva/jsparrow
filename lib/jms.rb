@@ -1,5 +1,5 @@
 # Libs directory definition
-JEE_LIB_DIR = File.expand_path(File.dirname(__FILE__)) + '/jee'
+JEE_LIB_DIR = File.expand_path(File.dirname(__FILE__)) + '/jms'
 
 # Befor all, the fundamental require for us
 require 'java'
