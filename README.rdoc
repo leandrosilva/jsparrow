@@ -69,4 +69,4 @@ jsparrow rocks! =)
 
 == Copyright
 
-Copyright (c) 2009 Leandro Silva <leandrodoze@gmail.com>. See LICENSE for details.
+Copyright (c) 2009 Leandro Silva (CodeZone) <leandrodoze@gmail.com>. See LICENSE for details.
