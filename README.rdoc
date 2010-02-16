@@ -21,25 +21,30 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
   require 'rubygems'
   require 'sparrow'
 
-2) Create and setup a sparrow JMS client
+2) Setup indispensable informations to connect your JMS middleware
 
-  jms_client = Sparrow::Connection::Client.new do |properties|
-	  properties.client_jar_file         = '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
-	  properties.initial_context_factory = 'org.exolab.jms.jndi.InitialContextFactory'
-	  properties.provider_url            = 'tcp://localhost:3035'
-	  # properties.security_principal    = ''
-	  # properties.security_credentials  = ''
-  end
+	Sparrow::Connection.configure do |connection|
+	  connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
 
-  jms_client.enable_connection_factories(
-      :queue_connection_factory => 'ConnectionFactory'
-    )
-    
-  jms_client.enable_queues(
-      :my_queue => 'MyQueue'
-    )
+	  connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
+	                                 :provider_url            => 'tcp://localhost:3035'
+	                               # :security_principal      => 'user',
+	                               # :security_credentials    => 'password'
 
-3) OK! You can send and receive messages right now!
+	  connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
+	                                         :topic_connection_factory => 'ConnectionFactory'
+	end
+
+3) Create the client and setup a queue
+
+	jms_client = Sparrow::Connection.new_client
+	jms_client.enable_queues :pardal_queue => 'MyQueue'
+	
+4) After appropriate setup, start the client
+
+	jms_client.start
+
+5) OK! Now you can send and receive messages right now!
 
   jms_client.queue_sender(:my_queue).send_text_message('sparrow rocks!') do |msg|
     msg.set_string_property('recipient', 'sparrow-example')
@@ -54,7 +59,11 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
     puts msg.text                # sparrow rocks!
   end
 
-So, now start the OC4J server, create the connection factory (ConnectionFactory) and queue (MyQueue), and run above script:
+6) After you receive your amazing messages, stop the client
+
+	jms_client.stop
+
+So, now that you did code and save it, start the OpenJMS server, create the queue (MyQueue), and run above script:
 
   jruby my_sparrow_test.rb
 
