@@ -6,16 +6,18 @@ module JSparrow
   module Connection
 
     #
-    # Metodo usado para configurar a conexao com o middleware de JMS.
+    # Metodo usado para configurar a conexao com o provedor de JMS.
     #
     def self.configure
       @@config = Configuration.new
       
       yield @@config
+      
+      @@config
     end
     
     #
-    # Metodo usado para obter a configuracao para conexao com o middleware de JMS.
+    # Metodo usado para obter a configuracao para conexao com o provedor de JMS.
     #
     def self.configuration
       @@config
@@ -32,7 +34,7 @@ module JSparrow
 
     #
     # Configuracoes necessarias para que clientes JMS se conetem
-    # ao middleware de mensageria via contexto JNDI.
+    # ao provedor de mensageria via contexto JNDI.
     #
     class Configuration
       attr_reader :jms_client_jar, :jndi_properties,
@@ -63,7 +65,7 @@ module JSparrow
   module JNDI
     
     #
-    # Builder para construcao de contexto JNDI para conexao com o middleware
+    # Builder para construcao de contexto JNDI para conexao com o provedor
     # de JMS.
     #
     class ContextBuilder

@@ -17,32 +17,23 @@ module JSparrowHelperMethods
     JSparrow::Connection.new_client
   end
   
-  def create_and_setup_jms_client
-    configure_connection
-    
-    jms_client = JSparrow::Connection.new_client
-    jms_client.enable_queues :pardal_queue => 'PardalQueue'
-    jms_client.enable_topics :pardal_topic => 'PardalTopic'
+  def configure_connection
+    JSparrow::Connection.configure do |connection|
+      connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
 
-    jms_client
-  end
-  
-  # --- Private methods --- #
-  private
-    
-    def configure_connection
-      JSparrow::Connection.configure do |connection|
-        connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
-
-        connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
-                                       :provider_url            => 'tcp://localhost:3035'
-                                     # :security_principal      => 'user',
-                                     # :security_credentials    => 'password'
-
-        connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
-                                               :topic_connection_factory => 'ConnectionFactory'
-      end
+      connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
+                                     :provider_url            => 'tcp://localhost:3035'
+                                   # :security_principal      => 'user',
+                                   # :security_credentials    => 'password'
+      
+      connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
+                                             :topic_connection_factory => 'ConnectionFactory'
+      
+      connection.enable_queues :test_queue => 'TestQueue'
+      
+      connection.enable_topics :test_topic => 'TestTopic'
     end
+  end
 end
 
 #

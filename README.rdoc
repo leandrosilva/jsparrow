@@ -10,16 +10,16 @@ Make gem install:
 
 === Example
 
-===== Six steps to send and receive JMS messages to/from a JMS middleware.
+===== Five steps to send and receive JMS messages to/from a JMS provider.
 
-WARNING: OpenJMS will be used as JMS middleware, but any other could be used with no problems.
+WARNING: OpenJMS will be used as JMS provider, but any other could be used with no problems.
 
 1) Create my_jsparrow_test.rb file and require the gems
 
   require 'rubygems'
   require 'jsparrow'
 
-2) Setup indispensable informations to connect your JMS middleware
+2) Setup indispensable informations to connect your JMS provider
 
   JSparrow::Connection.configure do |connection|
     connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
@@ -29,20 +29,17 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
                                  # :security_principal      => 'user',
                                  # :security_credentials    => 'password'
 
-    connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
-                                           :topic_connection_factory => 'ConnectionFactory'
+    connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory'
+    
+    connection.enable_queues :my_queue => 'MyQueue'
   end
 
-3) Create the client and setup a queue
+3) Create the client and start it
 
   jms_client = JSparrow::Connection.new_client
-  jms_client.enable_queues :my_queue => 'MyQueue'
-  
-4) After appropriate setup, start the client
-
   jms_client.start
 
-5) OK! Now you can send and receive messages right now!
+4) OK! Now you can send and receive messages right now!
 
   jms_client.queue_sender(:my_queue).send_text_message('jsparrow rocks!') do |msg|
     msg.set_string_property('recipient', 'jsparrow-example')
@@ -57,7 +54,7 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
     puts "message: #{msg.text}"                        # message: jsparrow rocks!
   end
 
-6) After you receive your amazing messages, stop the client
+5) After you receive your amazing messages, stop the client
 
   jms_client.stop
 

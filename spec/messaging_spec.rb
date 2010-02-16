@@ -8,11 +8,11 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 describe JSparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queue especifica,' do
   
   before(:all) do
-    @jms_client = create_and_setup_jms_client
+    @jms_client = create_jms_client
     @jms_client.start
     
-    @sender   = @jms_client.queue_sender(:pardal_queue)
-    @receiver = @jms_client.queue_receiver(:pardal_queue)
+    @sender   = @jms_client.queue_sender(:test_queue)
+    @receiver = @jms_client.queue_receiver(:test_queue)
   end
   
   after(:all) do

@@ -9,20 +9,19 @@ JSparrow::Connection.configure do |connection|
                                # :security_principal      => 'user',
                                # :security_credentials    => 'password'
 
-  connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
-                                         :topic_connection_factory => 'ConnectionFactory'
+  connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory'
+  
+  connection.enable_queues :test_queue => 'TestQueue'
 end
 
 jms_client = JSparrow::Connection.new_client
-jms_client.enable_queues :pardal_queue => 'PardalQueue'
-
 jms_client.start
 
-jms_client.queue_sender(:pardal_queue).send_text_message('jsparrow rocks!') do |msg|
+jms_client.queue_sender(:test_queue).send_text_message('jsparrow rocks!') do |msg|
   msg.set_string_property('recipient', 'jsparrow-example')
 end
 
-jms_client.queue_receiver(:pardal_queue).receive_message(
+jms_client.queue_receiver(:test_queue).receive_message(
     :timeout  => 5000,
     :selector => "recipient = 'jsparrow-example'"
   ) do |msg|

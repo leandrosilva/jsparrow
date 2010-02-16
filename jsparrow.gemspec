@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
      "lib/jsparrow.rb",
      "lib/messaging.rb",
      "sample/sample.rb",
+     "spec/client_spec.rb",
      "spec/connection_spec.rb",
      "spec/messaging_spec.rb",
      "spec/spec_helper.rb"
@@ -40,7 +41,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{JSparrow is a JMS client based on JRuby}
   s.test_files = [
-    "spec/connection_spec.rb",
+    "spec/client_spec.rb",
+     "spec/connection_spec.rb",
      "spec/messaging_spec.rb",
      "spec/spec_helper.rb"
   ]
