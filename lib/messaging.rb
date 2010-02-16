@@ -2,7 +2,7 @@
 import 'javax.jms.Session'
 import 'javax.jms.MessageListener'
 
-module Sparrow
+module JSparrow
   module Messaging
 
     #

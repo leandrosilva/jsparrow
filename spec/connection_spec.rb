@@ -3,7 +3,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 #
 # Cenario que testa o start e stop do cliente JMS.
 #
-describe Sparrow::Connection::Client, ', quando criado,' do
+describe JSparrow::Connection::Client, ', quando criado,' do
 
   before(:all) do
     @jms_client = create_jms_client
@@ -30,7 +30,7 @@ end
 # Importante: nesse momento o cliente JMS ainda nao sera iniciado, ja que nao deve haver
 #             configuracao depois inicia-lo.
 #
-describe Sparrow::Connection::Client, ', quando esta sendo configurado, mas ainda nao iniciado,' do
+describe JSparrow::Connection::Client, ', quando esta sendo configurado, mas ainda nao iniciado,' do
 
   before(:all) do
     @jms_client = create_jms_client
@@ -63,7 +63,7 @@ end
 # Importante: Como o cliente JMS ja esta iniciado, deve lancar erro, nao permitindo
 #             qualquer configuracao.
 #
-describe Sparrow::Connection::Client, ', quando esta sendo configurado, apos iniciado,' do
+describe JSparrow::Connection::Client, ', quando esta sendo configurado, apos iniciado,' do
 
   before(:all) do
     @jms_client = create_jms_client
@@ -77,13 +77,13 @@ describe Sparrow::Connection::Client, ', quando esta sendo configurado, apos ini
   it 'nao deveria permitir habilitar uma Queue especifica' do
     lambda {
         @jms_client.enable_queues(:pardal_queue => 'PardalQueue')
-      }.should raise_error Sparrow::Connection::InvalidClientStateError
+      }.should raise_error JSparrow::Connection::InvalidClientStateError
   end
   
   it 'nao deveria permitir habilitar um Topic especifico' do
     lambda {
         @jms_client.enable_topics(:pardal_topic => 'PardalTopic')
-      }.should raise_error Sparrow::Connection::InvalidClientStateError
+      }.should raise_error JSparrow::Connection::InvalidClientStateError
   end  
 end
 
@@ -91,7 +91,7 @@ end
 # Cenario pos-configuracao do cliente JMS, quando as queues e os topicos ja devem estar
 # disponiveis, e entao e possivel obter sender/receiver para elas.
 #
-describe Sparrow::Connection::Client, ', depois de ter sido configurado,' do
+describe JSparrow::Connection::Client, ', depois de ter sido configurado,' do
 
   before(:all) do
     @jms_client = create_and_setup_jms_client

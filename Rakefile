@@ -4,10 +4,10 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "sparrow"
-    gem.summary = %Q{Sparrow is a JMS client (JRuby based)}
+    gem.name = "jsparrow"
+    gem.summary = %Q{JSparrow is a JMS client based on JRuby}
     gem.email = "leandrodoze@gmail.com"
-    gem.homepage = "http://github.com/leandrosilva/sparrow"
+    gem.homepage = "http://github.com/leandrosilva/jsparrow"
     gem.authors = ["Leandro Silva"]
     gem.files =  FileList["[A-Z]*", "{lib,spec}/**/*"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
@@ -19,7 +19,7 @@ end
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = 'sparrow'
+  rdoc.title = 'jsparrow'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')

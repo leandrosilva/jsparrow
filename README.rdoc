@@ -1,14 +1,12 @@
-= sparrow
+= jsparrow
 
-Sparrow is a JMS client based on JRuby.
+JSparrow is a JMS client based on JRuby. Previously it has been called Sparrow, but changed his name because has another project with the same name.
 
 === Install
 
 Make gem install:
 
-  sudo gem install sparrow -s http://gemcutter.org
-
-I'M SORRY! Unavailable for now, because already have a gem named sparrow. I will change it name.
+  sudo gem install jsparrow -s http://gemcutter.org
 
 === Example
 
@@ -16,14 +14,14 @@ I'M SORRY! Unavailable for now, because already have a gem named sparrow. I will
 
 WARNING: OpenJMS will be used as JMS middleware, but any other could be used with no problems.
 
-1) Create my_sparrow_test.rb file and require the gems
+1) Create my_jsparrow_test.rb file and require the gems
 
   require 'rubygems'
-  require 'sparrow'
+  require 'jsparrow'
 
 2) Setup indispensable informations to connect your JMS middleware
 
-  Sparrow::Connection.configure do |connection|
+  JSparrow::Connection.configure do |connection|
     connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
 
     connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
@@ -37,7 +35,7 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
 
 3) Create the client and setup a queue
 
-  jms_client = Sparrow::Connection.new_client
+  jms_client = JSparrow::Connection.new_client
   jms_client.enable_queues :pardal_queue => 'MyQueue'
   
 4) After appropriate setup, start the client
@@ -46,17 +44,17 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
 
 5) OK! Now you can send and receive messages right now!
 
-  jms_client.queue_sender(:my_queue).send_text_message('sparrow rocks!') do |msg|
-    msg.set_string_property('recipient', 'sparrow-example')
+  jms_client.queue_sender(:my_queue).send_text_message('jsparrow rocks!') do |msg|
+    msg.set_string_property('recipient', 'jsparrow-example')
   end
 
   jms_client.queue_receiver(:my_queue).receive_message(
       :timeout  => 5000,
-      :selector => "recipient = 'sparrow-example'"
+      :selector => "recipient = 'jsparrow-example'"
     ) do |msg|
     
     puts msg.is_text_message?    # true
-    puts msg.text                # sparrow rocks!
+    puts msg.text                # jsparrow rocks!
   end
 
 6) After you receive your amazing messages, stop the client
@@ -65,9 +63,9 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
 
 So, now that you did code and save it, start the OpenJMS server, create the queue (MyQueue), and run above script:
 
-  jruby my_sparrow_test.rb
+  jruby my_jsparrow_test.rb
 
-sparrow rocks! =)
+jsparrow rocks! =)
 
 == Copyright
 

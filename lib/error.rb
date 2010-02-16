@@ -1,4 +1,4 @@
-module Sparrow
+module JSparrow
   module Error
     class AbstractMethodError < StandardError
       def initialize(class_name, method_name)

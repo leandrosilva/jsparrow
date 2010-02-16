@@ -2,7 +2,7 @@
 import 'java.util.Hashtable'
 import 'javax.naming.InitialContext'
 
-module Sparrow
+module JSparrow
   module Connection
 
     #

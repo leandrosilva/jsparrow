@@ -5,7 +5,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 # receber mensagens de tres tipos (Texto, Objeto e Mapa) de uma queue especifica,
 # individualmente ou em lote.
 #
-describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queue especifica,' do
+describe JSparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queue especifica,' do
   
   before(:all) do
     @jms_client = create_and_setup_jms_client
@@ -23,12 +23,12 @@ describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queu
     my_text = 'Mensagem de texto enviada da spec'
     
     @sender.send_text_message(my_text) do |msg|
-      msg.set_string_property('recipient', 'sparrow-spec')
+      msg.set_string_property('recipient', 'jsparrow-spec')
     end
     
     received_text = nil
     
-    @receiver.receive_message(:selector => "recipient = 'sparrow-spec'") do |msg|
+    @receiver.receive_message(:selector => "recipient = 'jsparrow-spec'") do |msg|
       received_text = msg.text
     end
     
@@ -40,12 +40,12 @@ describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queu
     my_object << 'Obj1 enviado da spec'
     
     @sender.send_object_message(my_object) do |msg|
-      msg.set_string_property('recipient', 'sparrow-spec')
+      msg.set_string_property('recipient', 'jsparrow-spec')
     end
     
     received_object = nil
     
-    @receiver.receive_message(:selector => "recipient = 'sparrow-spec'") do |msg|
+    @receiver.receive_message(:selector => "recipient = 'jsparrow-spec'") do |msg|
       received_object = msg.object
     end
     
@@ -56,13 +56,13 @@ describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queu
     my_id_long = 1234567
     
     @sender.send_map_message do |msg|
-      msg.set_string_property('recipient', 'sparrow-spec')
+      msg.set_string_property('recipient', 'jsparrow-spec')
       msg.set_long('id', my_id_long)
     end
     
     received_id_long = nil
     
-    @receiver.receive_message(:selector => "recipient = 'sparrow-spec'") do |msg|
+    @receiver.receive_message(:selector => "recipient = 'jsparrow-spec'") do |msg|
       received_id_long = msg.get_long('id')
     end
     
@@ -80,17 +80,17 @@ describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queu
     @sender.send_messages do |session, producer|
       #--- TextMessage
       text_message = session.create_text_message(my_text)
-      text_message.set_string_property('recipient', 'sparrow-spec')
+      text_message.set_string_property('recipient', 'jsparrow-spec')
       producer.send(text_message)
       
       #--- objectMessage
       object_message = session.create_object_message(my_object)
-      object_message.set_string_property('recipient', 'sparrow-spec')
+      object_message.set_string_property('recipient', 'jsparrow-spec')
       producer.send(object_message)
       
       #--- MapMessage
       map_message = session.create_map_message
-      map_message.set_string_property('recipient', 'sparrow-spec')
+      map_message.set_string_property('recipient', 'jsparrow-spec')
       map_message.set_long('id', my_id_long)
       producer.send(map_message)
       
@@ -102,7 +102,7 @@ describe Sparrow::Messaging, ', quando tem um Sender e um Receiver para uma Queu
     received_object  = nil
     received_id_long = nil
     
-    @receiver.receive_message(:timeout => 1000, :selector => "recipient = 'sparrow-spec'") do |msg|
+    @receiver.receive_message(:timeout => 1000, :selector => "recipient = 'jsparrow-spec'") do |msg|
       if msg.is_text_message?
         received_text = msg.text
       end
@@ -126,7 +126,7 @@ end
 # Cenario pos-configuracao do cliente JMS, quando deve ser possivel escutar mensagens
 # atraves de objetos listeners.
 #
-describe Sparrow::Messaging::Listener,
+describe JSparrow::Messaging::Listener,
          ', quando um Listener se registra para escutar uma Queue especifica,' do
   
   before(:all) do

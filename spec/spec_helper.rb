@@ -1,12 +1,12 @@
 require 'rubygems'
 require 'spec'
 
-require File.dirname(File.expand_path(__FILE__)) + '/../lib/sparrow.rb'
+require File.dirname(File.expand_path(__FILE__)) + '/../lib/jsparrow.rb'
 
 #
 # Modulo com metodos uteis para as specs.
 #
-module SparrowHelperMethods
+module JSparrowHelperMethods
 
   #
   # Apenas cria, mas nao faz o setup do cliente JMS.
@@ -14,13 +14,13 @@ module SparrowHelperMethods
   def create_jms_client
     configure_connection
     
-    Sparrow::Connection.new_client
+    JSparrow::Connection.new_client
   end
   
   def create_and_setup_jms_client
     configure_connection
     
-    jms_client = Sparrow::Connection.new_client
+    jms_client = JSparrow::Connection.new_client
     jms_client.enable_queues :pardal_queue => 'PardalQueue'
     jms_client.enable_topics :pardal_topic => 'PardalTopic'
 
@@ -31,7 +31,7 @@ module SparrowHelperMethods
   private
     
     def configure_connection
-      Sparrow::Connection.configure do |connection|
+      JSparrow::Connection.configure do |connection|
         connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
 
         connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
@@ -49,5 +49,5 @@ end
 # Enriquece a classe Spec::Example::ExampleGroup com o helper.
 #
 class Spec::Example::ExampleGroup
-  include SparrowHelperMethods
+  include JSparrowHelperMethods
 end
