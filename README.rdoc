@@ -53,8 +53,8 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
       :selector => "recipient = 'jsparrow-example'"
     ) do |msg|
     
-	  puts "is text message? #{msg.is_text_message?}"    # is text message? true
-	  puts "message: #{msg.text}"                        # message: jsparrow rocks!
+    puts "is text message? #{msg.is_text_message?}"    # is text message? true
+    puts "message: #{msg.text}"                        # message: jsparrow rocks!
   end
 
 6) After you receive your amazing messages, stop the client
@@ -71,7 +71,7 @@ jsparrow rocks! =)
 
 Or, if you don't want write code, only do it:
 
-	jruby sample/sample.rb
+  jruby sample/sample.rb
 
 == Copyright
 
