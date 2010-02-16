@@ -1,9 +1,66 @@
 require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
 #
+# Cenario que testa o start e stop do cliente JMS.
+#
+
+describe Sparrow::Connection::Client, ', quando criado,' do
+
+  before(:all) do
+    @jms_client = create_jms_client
+  end
+  
+  it 'deveria permitir ser iniciado e parado' do
+    @jms_client.start
+    
+    @jms_client.is_started?.should be true
+    @jms_client.is_stoped?.should be false
+    
+    @jms_client.stop
+    
+    @jms_client.is_started?.should be false
+    @jms_client.is_stoped?.should be true
+  end
+end
+
+#
 # Cenario de configuracao do cliente JMS, quando sao informadas as propriedades de ambiente
 # para conexao com o servidor de aplicacoes e a inicializacao do contexto JNDI inicial,
 # onde estao criadas as connection factories, queues e topics.
+#
+# Importante: nesse momento o cliente JMS ainda nao sera startado, ja que nao deve haver
+# configuracao depois starta-lo.
+#
+describe Sparrow::Connection::Client, ', quando esta sendo configurado, mas ainda nao startado,' do
+
+  before(:all) do
+    @jms_client = create_jms_client
+  end
+  
+  it 'deveria ter uma connection factory especifica para queues' do
+    @jms_client.queue_connection_factory_enabled?.should be true
+  end
+  
+  it 'deveria ter uma connection factory especifica para topics' do
+    @jms_client.topic_connection_factory_enabled?.should be true
+  end
+  
+  it 'deveria permitir habilitar uma Queue especifica' do
+    @jms_client.enable_queues :pardal_queue => 'PardalQueue'
+
+    @jms_client.queue_enabled?(:pardal_queue).should eql true
+  end
+  
+  it 'deveria permitir habilitar um Topic especifico' do
+    @jms_client.enable_topics :pardal_topic => 'PardalTopic'
+
+    @jms_client.topic_enabled?(:pardal_topic).should eql true
+  end  
+end
+
+#
+# Cenario de configuracao do cliente JMS. No entanto, como o cliente JMS
+# ja esta startado, deve lancar erro, nao permitindo qualquer configuracao.
 #
 describe Sparrow::Connection::Client, ', quando esta sendo configurado,' do
 

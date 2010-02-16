@@ -68,9 +68,9 @@ module Sparrow
         @configuration        = configuration
         @jndi_context_builder = jndi_context_builder
         
-        @jndi_name_of_connection_factories = @configuration.enabled_connection_factories
-        @jndi_name_of_enabled_queues       = {}
-        @jndi_name_of_enabled_topics       = {}
+        @jndi_name_of_enabled_connection_factories = @configuration.enabled_connection_factories
+        @jndi_name_of_enabled_queues               = {}
+        @jndi_name_of_enabled_topics               = {}
 
         # Conexoes, filas, topicos, senders e receivers que serao habilitados
         @connection_factories               = {}
@@ -98,7 +98,7 @@ module Sparrow
           raise ClientInitializationError.new(@configuration, cause)
         end
         
-        @connection_factories = lookup_connection_factories(@jndi_name_of_connection_factories)
+        @connection_factories = lookup_connection_factories(@jndi_name_of_enabled_connection_factories)
         @queues               = lookup_queues(@jndi_name_of_enabled_queues)
         @topics               = lookup_topics(@jndi_name_of_enabled_topics)
         
@@ -117,8 +117,16 @@ module Sparrow
         @started = false  
       end
 
+      def queue_connection_factory_enabled?
+        @jndi_name_of_enabled_connection_factories.include?(:queue_connection_factory)
+      end
+
       def queue_connection_factory
         @connection_factories[:queue_connection_factory]
+      end
+
+      def topic_connection_factory_enabled?
+        @jndi_name_of_enabled_connection_factories.include?(:topic_connection_factory)
       end
 
       def topic_connection_factory
