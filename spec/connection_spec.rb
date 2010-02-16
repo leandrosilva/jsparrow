@@ -3,7 +3,6 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 #
 # Cenario que testa o start e stop do cliente JMS.
 #
-
 describe Sparrow::Connection::Client, ', quando criado,' do
 
   before(:all) do
@@ -28,10 +27,10 @@ end
 # para conexao com o servidor de aplicacoes e a inicializacao do contexto JNDI inicial,
 # onde estao criadas as connection factories, queues e topics.
 #
-# Importante: nesse momento o cliente JMS ainda nao sera startado, ja que nao deve haver
-# configuracao depois starta-lo.
+# Importante: nesse momento o cliente JMS ainda nao sera iniciado, ja que nao deve haver
+#             configuracao depois inicia-lo.
 #
-describe Sparrow::Connection::Client, ', quando esta sendo configurado, mas ainda nao startado,' do
+describe Sparrow::Connection::Client, ', quando esta sendo configurado, mas ainda nao iniciado,' do
 
   before(:all) do
     @jms_client = create_jms_client
@@ -59,8 +58,10 @@ describe Sparrow::Connection::Client, ', quando esta sendo configurado, mas aind
 end
 
 #
-# Cenario de configuracao do cliente JMS. No entanto, como o cliente JMS
-# ja esta startado, deve lancar erro, nao permitindo qualquer configuracao.
+# Cenario de configuracao do cliente JMS apos ter sido iniciado.
+#
+# Importante: Como o cliente JMS ja esta iniciado, deve lancar erro, nao permitindo
+#             qualquer configuracao.
 #
 describe Sparrow::Connection::Client, ', quando esta sendo configurado,' do
 

@@ -98,9 +98,9 @@ module Sparrow
           raise ClientInitializationError.new(@configuration, cause)
         end
         
-        @connection_factories = lookup_connection_factories(@jndi_name_of_enabled_connection_factories)
-        @queues               = lookup_queues(@jndi_name_of_enabled_queues)
-        @topics               = lookup_topics(@jndi_name_of_enabled_topics)
+        @connection_factories = lookup_resource(@jndi_name_of_enabled_connection_factories)
+        @queues               = lookup_resource(@jndi_name_of_enabled_queues)
+        @topics               = lookup_resource(@jndi_name_of_enabled_topics)
         
         @started = true
       end
@@ -184,34 +184,14 @@ module Sparrow
       # -- Private methods -- #
       private
       
-        def lookup_connection_factories(jndi_names = {})
-          lookuped_connection_factories = {}
-          
-          jndi_names.each_pair do |key, jndi_name|
-            lookuped_connection_factories[key] = @jndi_context.lookup(jndi_name)
-          end
-          
-          lookuped_connection_factories
-        end
-
-        def lookup_queues(jndi_names = {})
-          lookuped_queues = {}
+        def lookup_resource(jndi_names = {})
+          lookuped = {}
           
           jndi_names.each do |key, jndi_name|
-            lookuped_queues[key] = @jndi_context.lookup(jndi_name)
+            lookuped[key] = @jndi_context.lookup(jndi_name)
           end
           
-          lookuped_queues
-        end
-
-        def lookup_topics(jndi_names = {})
-          lookuped_topics = {}
-          
-          jndi_names.each do |key, jndi_name|
-            lookuped_topics[key] = @jndi_context.lookup(jndi_name)
-          end
-          
-          lookuped_topics
+          lookuped
         end
     end
     
