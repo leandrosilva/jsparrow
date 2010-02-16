@@ -61,7 +61,7 @@ WARNING: OpenJMS will be used as JMS middleware, but any other could be used wit
 
   jms_client.stop
 
-So, now that you did code and save it, start the OpenJMS server, create the queue (MyQueue), and run above script:
+So, now that you wrote code and save it, start the OpenJMS server, create the queue (MyQueue), and run above script:
 
   jruby my_jsparrow_test.rb
 
