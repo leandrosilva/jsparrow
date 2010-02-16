@@ -67,7 +67,9 @@ So, now that you did code and save it, start the OpenJMS server, create the queu
 
 jsparrow rocks! =)
 
-===== Sample code
+=== Sample
+
+===== A very simple sample code
 
 Or, if you don't want write code, only do it:
 
