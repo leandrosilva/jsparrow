@@ -80,22 +80,22 @@ module JSparrow
       # --- Private methods --- #
       private
       
-      def send_message(&message_creator)
-        # Cria uma conexao, uma sessao e um emissor de qualquer tipo de mensagem
-        connection = @connection_factory.create_connection
-        session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
-        producer   = session.create_producer(@destination)
+        def send_message(&message_creator)
+          # Cria uma conexao, uma sessao e um emissor de qualquer tipo de mensagem
+          connection = @connection_factory.create_connection
+          session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
+          producer   = session.create_producer(@destination)
         
-        # Obtem uma mensagem (TextMessage, ObjectMessage ou MapMessage) do criador especifico
-        message = message_creator.call(session)
+          # Obtem uma mensagem (TextMessage, ObjectMessage ou MapMessage) do criador especifico
+          message = message_creator.call(session)
         
-        # Envia a mensagem
-        producer.send(message)
+          # Envia a mensagem
+          producer.send(message)
         
-        # Commita a sessao e fecha a conexao
-        session.commit
-        connection.close
-      end
+          # Commita a sessao e fecha a conexao
+          session.commit
+          connection.close
+        end
     end
     
     #
