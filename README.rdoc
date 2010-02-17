@@ -70,7 +70,7 @@ jsparrow rocks! =)
 
 Or, if you don't want write code, only do it:
 
-  jruby sample/sample.rb
+  jruby sample/sample_queue.rb
 
 == Copyright
 
