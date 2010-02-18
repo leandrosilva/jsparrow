@@ -135,31 +135,17 @@ module JSparrow
     # TODO: Completar a implementacao. Ainda nao esta legal. (Ja dei um tapinha,
     #       acho que agora ta bem proximo do que deve ser.)
     #
-    class Listener < Base
+    module Listener
       include MessageListener
       
-      attr_reader :connection_factory_name, :destination_name, :criteria_to_receiving
-      
-      #
-      # Estes parametros serao injetados pelo listener manager de acordo com o
-      # que houver sido definido pelos metodos connection_factory_name e destination_name.
-      #
-      def initialize(connection_factory, destination)
-        super(connection_factory, destination)
-        
-        @connection_factory_name = 'undefined'
-        @destination_name        = 'undefined'
-        @criteria_to_receiving   = {}
-      end
-
       #
       # Nome JNDI da connection factory que ser usada para criar conexoes JMS.
       #
       # Invariavelmente deve ser usado pelas subclasses para informar qual devera
       # ser a connection factory usada por esse listener.
       #
-      def use_connection_factory(jndi_name)
-        @connection_factory_name = jndi_name
+      def self.use_connection_factory(jndi_name)
+        configure(:connection_factory, jndi_name)
       end
       
       #
@@ -168,8 +154,8 @@ module JSparrow
       # Invariavelmente deve ser usado pelas subclasses, para informar o nome
       # da queue ou topico que sera escutado.
       #
-      def listen_to_destination(jndi_name)
-        @destination_name = jndi_name
+      def self.listen_to_destination(jndi_name)
+        configure(:destination_name, jndi_name)
       end
       
       #
@@ -178,9 +164,11 @@ module JSparrow
       # Invariavelmente as subclasses precisam usar esse metodo para definir
       # os criterios de recebimento que este listener levara em conta.
       #
-      def receive_only_in_criteria(criteria = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''})
+      def self.receive_only_in_criteria(criteria = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''})
         # Valor default para timeout, caso nao tenha sido informado
-        @criteria_to_receiving[:timeout] = criteria[:timeout] || DEFAULT_RECEIVER_TIMEOUT
+        criteria[:timeout] ||= DEFAULT_RECEIVER_TIMEOUT
+        
+        configure(:criteria_to_receiving, criteria)
       end
 
       #
@@ -222,6 +210,16 @@ module JSparrow
       def on_receive_message(received_message)
         raise Error::AbstractMethodError.new('on_receive_message')
       end
+  
+      private
+
+        def self.configure(attribute, value)
+          self.instance_eval do
+            send(:define_method, attribute) do
+              value
+            end
+          end
+        end
     end
   end
   
