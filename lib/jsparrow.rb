@@ -6,5 +6,6 @@ require 'jms.rb'
 # Bibliotecas do JSparrow
 require 'connection.rb'
 require 'client.rb'
+require 'listener.rb'
 require 'messaging.rb'
 require 'error.rb'

@@ -33,6 +33,15 @@ module JSparrow
       
       Client.new(connection)
     end
+    
+    #
+    # Metodo usado para criar um novo Listener de mensagens JMS.
+    #
+    def self.new_listener
+      connection = Base.new(@@configuration, @@jndi_context_builder)
+      
+      Listener.new(connection)
+    end
 
     #
     # Classe base para estabelecer conexao com o provedor JMS via JNDI. 

@@ -28,4 +28,16 @@ describe JSparrow::Connection, ', quando configurado,' do
   it 'deveria ter enabled_topics' do
     @config.enabled_topics.should_not be nil
   end
+  
+  it 'deveria permitir criar um novo Client' do
+    jms_client = JSparrow::Connection.new_client
+    
+    jms_client.class.should be JSparrow::Connection::Client
+  end
+  
+  it 'deveria permitir criar um novo Listener' do
+    jms_listener = JSparrow::Connection.new_listener
+    
+    jms_listener.class.should be JSparrow::Connection::Listener
+  end
 end

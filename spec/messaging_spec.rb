@@ -121,22 +121,3 @@ describe JSparrow::Messaging, ', quando tem um Sender e um Receiver para uma Que
     received_id_long.should eql my_id_long
   end
 end
-
-#
-# Cenario pos-configuracao do cliente JMS, quando deve ser possivel escutar mensagens
-# atraves de objetos listeners.
-#
-describe JSparrow::Messaging::Listener,
-         ', quando um Listener se registra para escutar uma Queue especifica,' do
-  
-  before(:all) do
-    @jms_client = create_jms_client
-    @jms_client.start
-  end
-  
-  after(:all) do
-    @jms_client.stop
-  end
-  
-  it 'deveria possibilitar escutar mensagens atraves de um listener'
-end
