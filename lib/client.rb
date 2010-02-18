@@ -9,9 +9,8 @@ module JSparrow
     # que prove o servico JMS.
     #
     class Client
-      def initialize(connection_config, jndi_context_builder)
-        @connection_config    = connection_config
-        @jndi_context_builder = jndi_context_builder
+      def initialize(connection)
+        @connection = connection
     
         # Conexoes, filas, topicos, senders e receivers que serao habilitados
         @connection_factories = {}
@@ -21,43 +20,28 @@ module JSparrow
         @topics               = {}
         @topic_senders        = {}
         @topic_receivers      = {}
-
-        # Foi iniciado?
-        @started = false
       end
   
       def is_started?
-        @started
+        @connection.is_opened?
       end
   
       def start
-        raise InvalidClientStateError.new('started', 'start') if is_started?
-    
-        begin
-          @jndi_context = @jndi_context_builder.build
-        rescue => cause
-          raise ClientInitializationError.new(@connection_config, cause)
-        end
+        @connection.open
     
         @connection_factories, @queues, @topics = lookup_resources
-    
-        @started = true
       end
   
       def is_stoped?
-        !@started
+        @connection.is_closed?
       end
   
       def stop
-        raise InvalidClientStateError.new('stoped', 'stop') if is_stoped?
-    
-        @jndi_context.close
-    
-        @started = false  
+        @connection.close
       end
 
       def queue_connection_factory_enabled?
-        @connection_config.enabled_connection_factories.include?(:queue_connection_factory)
+        @connection.configuration.enabled_connection_factories.include?(:queue_connection_factory)
       end
 
       def queue_connection_factory
@@ -65,7 +49,7 @@ module JSparrow
       end
   
       def queue_enabled?(queue_name)
-        @connection_config.enabled_queues.include?(queue_name)
+        @connection.configuration.enabled_queues.include?(queue_name)
       end
   
       def queue(queue_name)
@@ -85,7 +69,7 @@ module JSparrow
       end
 
       def topic_connection_factory_enabled?
-        @connection_config.enabled_connection_factories.include?(:topic_connection_factory)
+        @connection.configuration.enabled_connection_factories.include?(:topic_connection_factory)
       end
 
       def topic_connection_factory
@@ -93,7 +77,7 @@ module JSparrow
       end
   
       def topic_enabled?(topic_name)
-        @connection_config.enabled_topics.include?(topic_name)
+        @connection.configuration.enabled_topics.include?(topic_name)
       end
   
       def topic(topic_name)
@@ -116,46 +100,12 @@ module JSparrow
       private
 
         def lookup_resources
-          @lookuped_connection_factories = lookup_resource(@connection_config.enabled_connection_factories)
-          @lookuped_queues               = lookup_resource(@connection_config.enabled_queues)
-          @lookuped_topic                = lookup_resource(@connection_config.enabled_topics)
+          @lookuped_connection_factories = @connection.lookup_resource(@connection.configuration.enabled_connection_factories)
+          @lookuped_queues               = @connection.lookup_resource(@connection.configuration.enabled_queues)
+          @lookuped_topic                = @connection.lookup_resource(@connection.configuration.enabled_topics)
           
           return @lookuped_connection_factories, @lookuped_queues, @lookuped_topic
         end
-  
-        def lookup_resource(jndi_names = {})
-          lookuped = {}
-      
-          return lookuped unless jndi_names
-          
-          jndi_names.each do |key, jndi_name|
-            lookuped[key] = @jndi_context.lookup(jndi_name)
-          end
-      
-          lookuped
-        end
-    end
-
-    class ClientInitializationError < StandardError
-      attr_reader :config, :cause
-  
-      def initialize(config, cause)
-        super("Could not open connection to server. Verify the config's config.")
-    
-        @config = config
-        @cause  = cause
-      end
-    end
-
-    class InvalidClientStateError < StandardError
-      attr_reader :state, :operation
-  
-      def initialize(state, operation)
-        super("Could not did #{operation} because client is #{state}.")
-    
-        @state     = state
-        @operation = operation
-      end
     end
   end
 end
