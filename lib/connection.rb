@@ -53,12 +53,12 @@ module JSparrow
       end
       
       def open
-        raise InvalidConnectionStateError.new('opened', 'open') if is_opened?
+        raise InvalidStateError.new('opened', 'open') if is_opened?
     
         begin
           @jndi_context = @jndi_context_builder.build
         rescue => cause
-          raise ConnectionInitializationError.new(@configuration, cause)
+          raise InitializationError.new(@configuration, cause)
         end
         
         @opened = true
@@ -69,7 +69,7 @@ module JSparrow
       end
 
       def close
-        raise InvalidClientStateError.new('closed', 'close') if is_closed?
+        raise InvalidStateError.new('closed', 'close') if is_closed?
     
         @jndi_context.close
     
@@ -117,33 +117,33 @@ module JSparrow
         @enabled_topics = jndi_names
       end
     end
-  end
 
-  #
-  # Erro para quando uma conexao esta num estado invalido para uma operacao (open ou close).
-  #
-  class InvalidConnectionStateError < StandardError
-    attr_reader :state, :operation
+    #
+    # Erro para quando uma conexao esta num estado invalido para uma operacao (open ou close).
+    #
+    class InvalidStateError < StandardError
+      attr_reader :state, :operation
 
-    def initialize(state, operation)
-      super("Could not did #{operation} because connection is #{state}.")
-  
-      @state     = state
-      @operation = operation
+      def initialize(state, operation)
+        super("Could not did #{operation} because connection is #{state}.")
+
+        @state     = state
+        @operation = operation
+      end
     end
-  end
 
-  #
-  # Erro para quando nao for possivel estabelecer conexao com o provedor JMS.
-  #
-  class ConnectionInitializationError < StandardError
-    attr_reader :configuration, :cause
+    #
+    # Erro para quando nao for possivel estabelecer conexao com o provedor JMS.
+    #
+    class InitializationError < StandardError
+      attr_reader :configuration, :cause
 
-    def initialize(configuration, cause)
-      super("Could not open connection to JMS provider. Verify the config's config.")
-  
-      @configuration = configuration
-      @cause         = cause
+      def initialize(configuration, cause)
+        super("Could not open connection to JMS provider. Verify the config's config.")
+
+        @configuration = configuration
+        @cause         = cause
+      end
     end
   end
   

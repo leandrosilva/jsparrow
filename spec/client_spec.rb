@@ -20,6 +20,25 @@ describe JSparrow::Connection::Client, ', quando criado,' do
     @jms_client.is_started?.should be false
     @jms_client.is_stoped?.should be true
   end
+  
+  it 'nao deveria permitir ser iniciado se ja houver sido' do
+    @jms_client.start
+    
+    lambda {
+        @jms_client.start
+      }.should raise_error JSparrow::Connection::InvalidStateError
+    
+    @jms_client.stop
+  end
+  
+  it 'nao deveria permitir ser parado se ja houver sido' do
+    @jms_client.start
+    @jms_client.stop
+    
+    lambda {
+        @jms_client.stop
+      }.should raise_error JSparrow::Connection::InvalidStateError
+  end
 end
 
 #
