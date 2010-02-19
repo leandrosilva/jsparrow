@@ -4,13 +4,6 @@ require 'spec'
 require File.dirname(File.expand_path(__FILE__)) + '/../lib/jsparrow.rb'
 
 #
-# Listener da queue TestQueue
-#
-class TestQueueListener < JSparrow::Connection::Listener
-  
-end
-
-#
 # Modulo com metodos uteis para as specs.
 #
 module JSparrowHelperMethods
@@ -42,6 +35,13 @@ module JSparrowHelperMethods
       connection.enable_queues :test_queue => 'TestQueue'
       
       connection.enable_topics :test_topic => 'TestTopic'
+    end
+
+    #
+    # Listener da queue TestQueue
+    #
+    class TestQueueListener < JSparrow::Connection::Listener
+
     end
   end
 end
