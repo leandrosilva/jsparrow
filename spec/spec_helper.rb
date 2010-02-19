@@ -17,7 +17,7 @@ module JSparrowHelperMethods
   def create_jms_listener
     configure_connection
     
-    JSparrow::Connection.new_listener ::TestQueueListener
+    JSparrow::Connection.new_listener TestQueueListener
   end
 
   def configure_connection
@@ -36,13 +36,13 @@ module JSparrowHelperMethods
       
       connection.enable_topics :test_topic => 'TestTopic'
     end
+  end
 
-    #
-    # Listener da queue TestQueue
-    #
-    class TestQueueListener < JSparrow::Connection::Listener
+  #
+  # Listener da queue TestQueue
+  #
+  class TestQueueListener < JSparrow::Connection::Listener
 
-    end
   end
 end
 
