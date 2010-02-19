@@ -10,7 +10,11 @@ describe JSparrow::Connection::Listener,
   end
   
   it 'deveria ter uma connection_factory especifica para queues' do
-    @jms_listener.jndi_name_of_connection_factory.should_not be nil
+    @jms_listener.connection_factory_name.should_not be nil
+  end
+  
+  it 'deveria ter uma destination especifica para queues' do
+    @jms_listener.destination_name.should_not be nil
   end
 end
 

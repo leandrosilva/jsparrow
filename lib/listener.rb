@@ -20,7 +20,7 @@ module JSparrow
       # a connection factory usada por esse listener.
       #
       def self.use_connection_factory(jndi_name)
-        configure(:jndi_name_of_connection_factory, jndi_name)
+        configure(:connection_factory_name, jndi_name)
       end
       
       #
@@ -30,7 +30,7 @@ module JSparrow
       # ou topico que sera escutado.
       #
       def self.listen_to_destination(jndi_name)
-        configure(:jndi_name_of_destination, jndi_name)
+        configure(:destination_name, jndi_name)
       end
       
       #
@@ -60,8 +60,8 @@ module JSparrow
       def start_listening
         @connection.open
         
-        connection_factory = @connection.lookup_resource(jndi_name_of_connection_factory)
-        destination        = @connection.lookup_resource(jndi_name_of_destination)
+        connection_factory = @connection.lookup_resource(connection_factory_name)
+        destination        = @connection.lookup_resource(destination_name)
         
         # Cria uma conexao para escuta de mensagens
         @listening_connection = connection_factory.create_connection

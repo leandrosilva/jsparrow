@@ -42,7 +42,9 @@ module JSparrowHelperMethods
   # Listener da queue TestQueue
   #
   class TestQueueListener < JSparrow::Connection::Listener
-
+    use_connection_factory :queue_connection_factory
+    
+    listen_to_destination :test_queue
   end
 end
 
