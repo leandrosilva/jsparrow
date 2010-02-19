@@ -17,7 +17,7 @@ module JSparrowHelperMethods
   def create_jms_listener
     configure_connection
     
-    JSparrow::Connection.new_listener TestQueueListener
+    JSparrow::Connection.new_listener :as => TestQueueListener
   end
 
   def configure_connection
