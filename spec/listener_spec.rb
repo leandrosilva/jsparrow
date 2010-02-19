@@ -6,6 +6,7 @@ describe JSparrow::Connection::Listener,
          ', quando um Listener se registra para escutar uma Queue especifica,' do
   
   before(:all) do
+    @jms_listener = create_jms_listener
   end
   
   after(:all) do

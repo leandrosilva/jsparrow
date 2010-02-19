@@ -4,19 +4,29 @@ require 'spec'
 require File.dirname(File.expand_path(__FILE__)) + '/../lib/jsparrow.rb'
 
 #
+# Listener da queue TestQueue
+#
+class TestQueueListener < JSparrow::Connection::Listener
+  
+end
+
+#
 # Modulo com metodos uteis para as specs.
 #
 module JSparrowHelperMethods
 
-  #
-  # Apenas cria, mas nao faz o setup do cliente JMS.
-  #
   def create_jms_client
     configure_connection
     
     JSparrow::Connection.new_client
   end
   
+  def create_jms_listener
+    configure_connection
+    
+    JSparrow::Connection.new_listener ::TestQueueListener
+  end
+
   def configure_connection
     JSparrow::Connection.configure do |connection|
       connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'

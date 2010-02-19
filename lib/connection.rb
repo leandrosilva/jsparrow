@@ -37,10 +37,10 @@ module JSparrow
     #
     # Metodo usado para criar um novo Listener de mensagens JMS.
     #
-    def self.new_listener
+    def self.new_listener(listener_class)
       connection = Base.new(@@configuration, @@jndi_context_builder)
       
-      Listener.new(connection)
+      listener_class.new(connection)
     end
 
     #

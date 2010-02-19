@@ -6,38 +6,38 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 describe JSparrow::Connection, ', quando configurado,' do
 
   before(:all) do
-    @config = configure_connection
+    @configuration = configure_connection
   end
   
   it 'deveria ter jms_client_jar' do
-    @config.jms_client_jar.should_not be nil
+    @configuration.jms_client_jar.should_not be nil
   end
 
   it 'deveria ter jndi_properties' do
-    @config.jndi_properties.should_not be nil
+    @configuration.jndi_properties.should_not be nil
   end
 
   it 'deveria ter enabled_connection_factories' do
-    @config.enabled_connection_factories.should_not be nil
+    @configuration.enabled_connection_factories.should_not be nil
   end
 
   it 'deveria ter enabled_queues' do
-    @config.enabled_queues.should_not be nil
+    @configuration.enabled_queues.should_not be nil
   end
 
   it 'deveria ter enabled_topics' do
-    @config.enabled_topics.should_not be nil
+    @configuration.enabled_topics.should_not be nil
   end
   
   it 'deveria permitir criar um novo Client' do
-    jms_client = JSparrow::Connection.new_client
+    jms_client = create_jms_client
     
     jms_client.class.should be JSparrow::Connection::Client
   end
   
   it 'deveria permitir criar um novo Listener' do
-    jms_listener = JSparrow::Connection.new_listener
+    jms_listener = create_jms_listener
     
-    jms_listener.class.should be JSparrow::Connection::Listener
+    jms_listener.class.superclass.should be JSparrow::Connection::Listener
   end
 end
