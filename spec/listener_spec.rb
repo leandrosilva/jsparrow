@@ -8,15 +8,16 @@ describe JSparrow::Connection::Listener, ', quando especializado para escutar um
     @jms_listener = create_jms_listener
   end
   
-  it 'deveria ter listen_to_destination configurado para test_queue' do
+  it 'deveria ter listen_to configurado para a queue test_queue' do
     @jms_listener.listen_to_destination.should eql :queue => :test_queue
   end
 end
 
 #
-# Cenario para testar star e stop de um listener concreto (especializado de Listener).
+# Cenario para testar star e stop de um listener concreto (especializado de Listener),
+# bem como o recebimento de uma mensagem.
 #
-describe JSparrow::Connection::Listener, ', quando criado,' do
+describe JSparrow::Connection::Listener, ', quando especializado e criado,' do
   
   before(:all) do
     @jms_listener = create_jms_listener
@@ -30,5 +31,15 @@ describe JSparrow::Connection::Listener, ', quando criado,' do
     @jms_listener.stop_listening
     
     @jms_listener.is_listening?.should be false
+  end
+  
+  it 'deveria receber uma mensagem' do
+    send_message_to_listener TestQueueListener
+    
+    @jms_listener.start_listening
+    
+    @jms_listener.received_messages.size eql 1
+    
+    @jms_listener.stop_listening
   end
 end

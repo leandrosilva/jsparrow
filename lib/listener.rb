@@ -32,6 +32,8 @@ module JSparrow
       # Invariavelmente as subclasses precisam usar esse metodo, se quiserem definir
       # os criterios de recebimento que este listener levara em conta.
       #
+      # receive_only_in_criteria :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'"
+      #
       def self.receive_only_in_criteria(criteria = {:selector => ''})
         configure(:criteria_to_receiving, criteria)
       end
