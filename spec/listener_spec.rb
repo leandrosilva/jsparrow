@@ -14,7 +14,7 @@ describe JSparrow::Connection::Listener, ', quando especializado para escutar um
 end
 
 #
-# Cenario 
+# Cenario para testar star e stop de um listener concreto (especializado de Listener).
 #
 describe JSparrow::Connection::Listener, ', quando criado,' do
   
@@ -25,12 +25,10 @@ describe JSparrow::Connection::Listener, ', quando criado,' do
   it 'deveria permitir ser iniciado e parado' do
     @jms_listener.start_listening
     
-    @jms_listener.is_started?.should be true
-    @jms_listener.is_stoped?.should be false
+    @jms_listener.is_listening?.should be true
     
     @jms_listener.stop_listening
     
-    @jms_listener.is_started?.should be false
-    @jms_listener.is_stoped?.should be true
+    @jms_listener.is_listening?.should be false
   end
 end
