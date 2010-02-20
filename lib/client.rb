@@ -92,11 +92,11 @@ module JSparrow
         end
   
         def lookup_resources
-          @lookuped_connection_factories = @connection.lookup_resource(@connection.configuration.enabled_connection_factories)
-          @lookuped_queues               = @connection.lookup_resource(@connection.configuration.enabled_queues)
-          @lookuped_topic                = @connection.lookup_resource(@connection.configuration.enabled_topics)
+          lookuped_connection_factories = @connection.lookup_resources(@connection.configuration.enabled_connection_factories)
+          lookuped_queues               = @connection.lookup_resources(@connection.configuration.enabled_queues)
+          lookuped_topic                = @connection.lookup_resources(@connection.configuration.enabled_topics)
           
-          return @lookuped_connection_factories, @lookuped_queues, @lookuped_topic
+          return lookuped_connection_factories, lookuped_queues, lookuped_topic
         end
     end
   end

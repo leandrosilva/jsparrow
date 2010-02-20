@@ -2,33 +2,35 @@
 # Cenario pos-configuracao da conexao, quando deve ser possivel escutar mensagens
 # atraves de objetos listeners (especializacoes de Listener).
 #
-describe JSparrow::Connection::Listener,
-         ', quando especializado para escutar uma queue,' do
+describe JSparrow::Connection::Listener, ', quando especializado para escutar uma queue,' do
   
   before(:all) do
     @jms_listener = create_jms_listener
   end
   
-  it 'deveria ter a queue_connection_factory configurada' do
-    @jms_listener.connection_factory_name.should be :queue_connection_factory
-  end
-  
-  it 'deveria ter a destination test_queue configurada' do
-    @jms_listener.destination_name.should be :test_queue
+  it 'deveria ter listen_to_destination configurado para test_queue' do
+    @jms_listener.listen_to_destination.should eql :queue => :test_queue
   end
 end
 
-#---
-
-describe JSparrow::Connection::Listener,
-         ', quando um Listener se registra para escutar uma Queue especifica,' do
+#
+# Cenario 
+#
+describe JSparrow::Connection::Listener, ', quando criado,' do
   
   before(:all) do
     @jms_listener = create_jms_listener
   end
   
-  after(:all) do
+  it 'deveria permitir ser iniciado e parado' do
+    @jms_listener.start_listening
+    
+    @jms_listener.is_started?.should be true
+    @jms_listener.is_stoped?.should be false
+    
+    @jms_listener.stop_listening
+    
+    @jms_listener.is_started?.should be false
+    @jms_listener.is_stoped?.should be true
   end
-  
-  it 'deveria possibilitar escutar mensagens atraves de um listener'
 end

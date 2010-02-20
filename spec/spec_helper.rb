@@ -42,9 +42,11 @@ module JSparrowHelperMethods
   # Listener da queue TestQueue
   #
   class TestQueueListener < JSparrow::Connection::Listener
-    use_connection_factory :queue_connection_factory
+    listen_to :queue => :test_queue
     
-    listen_to_destination :test_queue
+    def on_receive_message(received_message)
+      puts "--- #{received_message}"
+    end
   end
 end
 

@@ -74,7 +74,7 @@ module JSparrow
       end
       
       def is_closed?
-        !@opened
+        not @opened
       end
 
       def close
@@ -85,16 +85,20 @@ module JSparrow
         @opened = false  
       end
 
-      def lookup_resource(jndi_names = {})
+      def lookup_resources(resources = {})
         lookuped_resource = {}
 
-        return lookuped_resource unless jndi_names
+        return lookuped_resource unless resources
     
-        jndi_names.each do |key, jndi_name|
-          lookuped_resource[key] = @jndi_context.lookup(jndi_name)
+        resources.each do |name, jndi_name|
+          lookuped_resource[name] = lookup_resource(jndi_name)
         end
 
         lookuped_resource
+      end
+      
+      def lookup_resource(jndi_name)
+        @jndi_context.lookup(jndi_name)
       end
     end
 
@@ -106,22 +110,51 @@ module JSparrow
       attr_reader :jms_client_jar, :jndi_properties,
                   :enabled_connection_factories, :enabled_queues, :enabled_topics
       
+      #
+      # Use:
+      #
+      # use_jms_client_jar "path/to/name_of_the_client_jar_file.jar"
+      #
       def use_jms_client_jar(client_jar)
         @jms_client_jar = client_jar
       end
       
+      #
+      # Use:
+      #
+      #   use_jndi_properties :a_jndi_property_name_in_lower_case     => "a_value_of_property",
+      #                       :other_jndi_property_name_in_lower_case => "other_value_of_property"
+      #
       def use_jndi_properties(jndi_properties = {})
         @jndi_properties = jndi_properties
       end
       
+      #
+      # Use:
+      #
+      #   enable_connection_factories :queue_connection_factory => "jndi_name_of_queue_connection_factory",
+      #                               :topic_connection_factory => "jndi_name_of_topic_connection_factory"
+      #
       def enable_connection_factories(jndi_names = {})
         @enabled_connection_factories = jndi_names
       end
       
+      #
+      # Use:
+      #
+      #   enable_queues :a_queue_name_in_lower_case     => "jndi_name_of_a_queue",
+      #                 :other_queue_name_in_lower_case => "jndi_name_of_other_queue"
+      #
       def enable_queues(jndi_names = {})
         @enabled_queues = jndi_names
       end
       
+      #
+      # Use:
+      #
+      #   enable_topics :a_topic_name_in_lower_case     => "jndi_name_of_a_topic",
+      #                 :other_topic_name_in_lower_case => "jndi_name_of_other_topic"
+      #
       def enable_topics(jndi_names = {})
         @enabled_topics = jndi_names
       end
