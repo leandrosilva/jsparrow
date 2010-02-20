@@ -9,25 +9,28 @@ describe JSparrow::Connection, ', quando configurado,' do
     @configuration = configure_connection
   end
   
-  it 'deveria ter jms_client_jar' do
+  it 'deveria ter jms_client_jar configurado' do
     @configuration.jms_client_jar.should_not be nil
   end
 
-  it 'deveria ter jndi_properties' do
+  it 'deveria ter jndi_properties configurado' do
     @configuration.jndi_properties.should_not be nil
   end
 
-  it 'deveria ter connection_factories habilitadas para queues e topics' do
+  it 'deveria ter a queue_connection_factory habilitada' do
     @configuration.enabled_connection_factories[:queue_connection_factory].should_not be nil
+  end
+
+  it 'deveria ter a topic_connection_factory habilitada' do
     @configuration.enabled_connection_factories[:topic_connection_factory].should_not be nil
   end
 
-  it 'deveria ter queues habilitadas' do
-    @configuration.enabled_queues.should_not be nil
+  it 'deveria ter a test_queue habilitada' do
+    @configuration.enabled_queues[:test_queue].should_not be nil
   end
 
-  it 'deveria ter topics habilitados' do
-    @configuration.enabled_topics.should_not be nil
+  it 'deveria ter o test_topic habilitado' do
+    @configuration.enabled_topics[:test_topic].should_not be nil
   end
   
   it 'deveria permitir criar um novo Client' do
