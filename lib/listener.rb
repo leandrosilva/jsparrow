@@ -14,23 +14,23 @@ module JSparrow
       include MessageListener
       
       #
-      # Nome JNDI da connection factory que ser usada para criar conexoes JMS.
+      # Nome (configurado no setup da conexao) da connection factory que ser usada para criar conexoes JMS.
       #
       # Invariavelmente deve ser usado pelas subclasses para informar qual devera ser
       # a connection factory usada por esse listener.
       #
-      def self.use_connection_factory(jndi_name)
-        configure(:connection_factory_name, jndi_name)
+      def self.use_connection_factory(connection_factory_name)
+        configure(:connection_factory_name, connection_factory_name)
       end
       
       #
-      # Nome JNDI do destino JMS que sera escutado.
+      # Nome (configurado no setup da conexao) do destino JMS que sera escutado.
       #
       # Invariavelmente deve ser usado pelas subclasses, para informar o nome da queue
       # ou topico que sera escutado.
       #
-      def self.listen_to_destination(jndi_name)
-        configure(:destination_name, jndi_name)
+      def self.listen_to_destination(destination_name)
+        configure(:destination_name, destination_name)
       end
       
       #
@@ -39,10 +39,7 @@ module JSparrow
       # Invariavelmente as subclasses precisam usar esse metodo, se quiserem definir
       # os criterios de recebimento que este listener levara em conta.
       #
-      def self.receive_only_in_criteria(criteria = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''})
-        # Valor default para timeout, caso nao tenha sido informado
-        criteria[:timeout] ||= DEFAULT_RECEIVER_TIMEOUT
-        
+      def self.receive_only_in_criteria(criteria = {:selector => ''})
         configure(:criteria_to_receiving, criteria)
       end
       
@@ -62,13 +59,14 @@ module JSparrow
         
         connection_factory = @connection.lookup_resource(connection_factory_name)
         destination        = @connection.lookup_resource(destination_name)
+        selector           = criteria_to_receiving[:selector] if responde_to? :criteria_to_receiving
         
         # Cria uma conexao para escuta de mensagens
         @listening_connection = connection_factory.create_connection
         
         # Cria uma sessao e um consumidor de qualquer tipo de mensagem
         session  = listening_connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
-        consumer = session.create_consumer(destination, @criteria_for_receiving[:selector])
+        consumer = session.create_consumer(destination, selector)
         
         # Registra-se como ouvinte
         consumer.message_listener = self

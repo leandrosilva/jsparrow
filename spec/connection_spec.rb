@@ -17,15 +17,16 @@ describe JSparrow::Connection, ', quando configurado,' do
     @configuration.jndi_properties.should_not be nil
   end
 
-  it 'deveria ter enabled_connection_factories' do
-    @configuration.enabled_connection_factories.should_not be nil
+  it 'deveria ter connection_factories habilitadas para queues e topics' do
+    @configuration.enabled_connection_factories[:queue_connection_factory].should_not be nil
+    @configuration.enabled_connection_factories[:topic_connection_factory].should_not be nil
   end
 
-  it 'deveria ter enabled_queues' do
+  it 'deveria ter queues habilitadas' do
     @configuration.enabled_queues.should_not be nil
   end
 
-  it 'deveria ter enabled_topics' do
+  it 'deveria ter topics habilitados' do
     @configuration.enabled_topics.should_not be nil
   end
   

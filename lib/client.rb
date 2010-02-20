@@ -40,14 +40,6 @@ module JSparrow
         @connection.close
       end
 
-      def queue_connection_factory_enabled?
-        @connection.configuration.enabled_connection_factories.include?(:queue_connection_factory)
-      end
-
-      def queue_connection_factory
-        @connection_factories[:queue_connection_factory]
-      end
-  
       def queue_enabled?(queue_name)
         @connection.configuration.enabled_queues.include?(queue_name)
       end
@@ -68,14 +60,6 @@ module JSparrow
             Messaging::Receiver.new(queue_connection_factory, queue(queue_name))
       end
 
-      def topic_connection_factory_enabled?
-        @connection.configuration.enabled_connection_factories.include?(:topic_connection_factory)
-      end
-
-      def topic_connection_factory
-        @connection_factories[:topic_connection_factory]
-      end
-  
       def topic_enabled?(topic_name)
         @connection.configuration.enabled_topics.include?(topic_name)
       end
@@ -99,6 +83,14 @@ module JSparrow
       # -- Private methods -- #
       private
 
+        def queue_connection_factory
+          @connection_factories[:queue_connection_factory]
+        end
+  
+        def topic_connection_factory
+          @connection_factories[:topic_connection_factory]
+        end
+  
         def lookup_resources
           @lookuped_connection_factories = @connection.lookup_resource(@connection.configuration.enabled_connection_factories)
           @lookuped_queues               = @connection.lookup_resource(@connection.configuration.enabled_queues)
