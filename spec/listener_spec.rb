@@ -9,11 +9,11 @@ describe JSparrow::Connection::Listener,
     @jms_listener = create_jms_listener
   end
   
-  it 'deveria ter uma connection_factory especifica para queues' do
+  it 'deveria ter a queue_connection_factory configurada' do
     @jms_listener.connection_factory_name.should be :queue_connection_factory
   end
   
-  it 'deveria ter uma destination especifica para queues' do
+  it 'deveria ter a destination test_queue configurada' do
     @jms_listener.destination_name.should be :test_queue
   end
 end
