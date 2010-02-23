@@ -35,10 +35,10 @@ module JSparrowHelperMethods
   def create_jms_listener
     configure_connection
     
-    JSparrow::Connection.new_listener :as => TestQueueListener
+    JSparrow::Connection.new_listener :as => JSparrowHelperClasses::TestQueueListener
   end
   
-  def send_message_to_listener(listener)
+  def send_message_to_listener(listener_name)
     @jms_client = create_jms_client
     @jms_client.start
     
@@ -46,32 +46,36 @@ module JSparrowHelperMethods
     
     @jms_client.queue_sender(:test_queue).send_text_message(my_text) do |msg|
       msg.set_string_property('recipient',   'jsparrow-spec')
-      msg.set_string_property('to_listener', listener.name)
+      msg.set_string_property('to_listener', listener_name)
     end
 
     @jms_client.stop
   end
+end
 
+module JSparrowHelperClasses
+  
   #
   # Listener da queue TestQueue
   #
   class TestQueueListener < JSparrow::Connection::Listener
     listen_to :queue => :test_queue
-    
+  
     receive_only_in_criteria :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'"
-    
+  
     attr_reader :received_messages
+  
+    def initialize(connection)
+      super(connection)
     
-    def initialize
       @received_messages = []
     end
-    
+  
     def on_receive_message(received_message)
       @received_messages << received_messages
     end
   end
 end
-
 #
 # Enriquece a classe Spec::Example::ExampleGroup com o helper.
 #

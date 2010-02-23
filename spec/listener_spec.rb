@@ -34,12 +34,14 @@ describe JSparrow::Connection::Listener, ', quando especializado e criado,' do
   end
   
   it 'deveria receber uma mensagem' do
-    send_message_to_listener TestQueueListener
+    send_message_to_listener 'TestQueueListener'
     
     @jms_listener.start_listening
     
-    @jms_listener.received_messages.size eql 1
+    sleep 1 # espera um pouquinho pra mensagem ser entregue
     
+    @jms_listener.received_messages.size.should eql 1
+
     @jms_listener.stop_listening
   end
 end
