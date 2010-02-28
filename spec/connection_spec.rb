@@ -35,13 +35,13 @@ describe JSparrow::Connection do
       subject.enabled_topics[:test_topic].should_not be nil
     end
   
-    it 'should let create a new Client' do
+    it 'should allow create a new Client' do
       jms_client = create_jms_client
     
       jms_client.class.should be JSparrow::Connection::Client
     end
   
-    it 'should let create a new Listener' do
+    it 'should allow create a new Listener' do
       jms_listener = create_jms_listener
     
       jms_listener.class.superclass.should be JSparrow::Connection::Listener
