@@ -13,7 +13,7 @@ describe JSparrow::Connection::Listener do
     end
   end
 
-  context 'Wheh inherited and created,' do
+  context 'When inherited and created,' do
   
     it 'should be started and stoped' do
       subject.start_listening
