@@ -1,8 +1,5 @@
 require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
-#
-# Cenario que testa a configuracao a conexao com o provedor de JMS.
-#
 describe JSparrow::Connection do
 
   subject do

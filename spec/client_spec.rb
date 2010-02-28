@@ -1,8 +1,5 @@
 require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
-#
-# Cenario que testa o start e stop do cliente JMS.
-#
 describe JSparrow::Connection::Client do
 
   subject do
