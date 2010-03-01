@@ -24,8 +24,6 @@ module JSparrowHelperMethods
       
       enable_topics :test_topic => 'TestTopic'
     end
-    
-    JSparrow::Connection.configuration
   end
 
   def create_jms_client

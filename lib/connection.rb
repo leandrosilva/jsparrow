@@ -13,6 +13,8 @@ module JSparrow
         @@configuration = Configuration.new
         
         class_eval(&block)
+        
+        @@configuration
       end
     
       #
