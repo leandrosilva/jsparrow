@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{jsparrow}
-  s.version = "1.1.1"
+  s.version = "1.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Leandro Silva"]
-  s.date = %q{2010-02-16}
+  s.date = %q{2010-03-01}
   s.email = %q{leandrodoze@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -28,11 +28,13 @@ Gem::Specification.new do |s|
      "lib/jms/jms.jar",
      "lib/jms/jsparrow-essential.jar",
      "lib/jsparrow.rb",
+     "lib/listener.rb",
      "lib/messaging.rb",
      "sample/sample_queue.rb",
      "sample/sample_topic.rb",
      "spec/client_spec.rb",
      "spec/connection_spec.rb",
+     "spec/listener_spec.rb",
      "spec/messaging_spec.rb",
      "spec/spec_helper.rb"
   ]
@@ -44,6 +46,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/client_spec.rb",
      "spec/connection_spec.rb",
+     "spec/listener_spec.rb",
      "spec/messaging_spec.rb",
      "spec/spec_helper.rb"
   ]
