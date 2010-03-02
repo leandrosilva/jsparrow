@@ -100,58 +100,48 @@ module JSparrow
     #
     # Receptor de mensagens.
     #
-    class Receiver < Base    
+    class Receiver < Base
       def receive_message(criteria_for_receiving = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''}, &message_handler)
-        # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
-        connection = @connection_factory.create_connection
-        session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
-        consumer   = session.create_consumer(@destination, criteria_for_receiving[:selector])
-        
-        # Prepara a conexao para receber mensagens
-        connection.start
-        
-        # Inicia o recebimento de mensagens
-        timeout = criteria_for_receiving[:timeout] || DEFAULT_RECEIVER_TIMEOUT
-        
-        if (received_message = consumer.receive(timeout))
-          # Inclui o modulo de identificacao de mensagem, util para o message_handler
-          class << received_message
-            include MessageType
-          end
-        
-          # Delega o tratamento da mensagem para o bloco recebido
-          message_handler.call(received_message)
-        end
-        
-        # Fecha a conexao
-        connection.close
+        receive(:one_message, criteria_for_receiving, &message_handler)
       end
 
       def receive_messages(criteria_for_receiving = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''}, &message_handler)
-        # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
-        connection = @connection_factory.create_connection
-        session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
-        consumer   = session.create_consumer(@destination, criteria_for_receiving[:selector])
-        
-        # Prepara a conexao para receber mensagens
-        connection.start
-        
-        # Inicia o recebimento de mensagens
-        timeout = criteria_for_receiving[:timeout] || DEFAULT_RECEIVER_TIMEOUT
-        
-        while (received_message = consumer.receive(timeout))
-          # Inclui o modulo de identificacao de mensagem, util para o message_handler
-          class << received_message
-            include MessageType
-          end
-        
-          # Delega o tratamento da mensagem para o bloco recebido
-          message_handler.call(received_message)
-        end
-        
-        # Fecha a conexao
-        connection.close
+        receive(:many_messages, criteria_for_receiving, &message_handler)
       end
+      
+      # --- Private methods --- #
+      private
+      
+        def receive(how_much_messages, criteria_for_receiving, &message_handler)
+          # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
+          connection = @connection_factory.create_connection
+          session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
+          consumer   = session.create_consumer(@destination, criteria_for_receiving[:selector])
+        
+          # Prepara a conexao para receber mensagens
+          connection.start
+        
+          # Inicia o recebimento de mensagens
+          timeout = criteria_for_receiving[:timeout] || DEFAULT_RECEIVER_TIMEOUT
+          
+          # Uma (if) mensagem ou muitas (while) mensagens?
+          conditional_keyword = (how_much_messages.eql? :one_message) ? 'if' : 'while'
+        
+          eval %Q{
+            #{conditional_keyword} (received_message = consumer.receive(timeout))
+              # Inclui o modulo de identificacao de mensagem, util para o message_handler
+              class << received_message
+                include MessageType
+              end
+
+              # Delega o tratamento da mensagem para o bloco recebido
+              message_handler.call(received_message)
+            end
+          }
+        
+          # Fecha a conexao
+          connection.close
+        end
     end
   
     #
