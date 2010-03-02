@@ -113,6 +113,32 @@ module JSparrow
         # Inicia o recebimento de mensagens
         timeout = criteria_for_receiving[:timeout] || DEFAULT_RECEIVER_TIMEOUT
         
+        if (received_message = consumer.receive(timeout))
+          # Inclui o modulo de identificacao de mensagem, util para o message_handler
+          class << received_message
+            include MessageType
+          end
+        
+          # Delega o tratamento da mensagem para o bloco recebido
+          message_handler.call(received_message)
+        end
+        
+        # Fecha a conexao
+        connection.close
+      end
+
+      def receive_messages(criteria_for_receiving = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''}, &message_handler)
+        # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
+        connection = @connection_factory.create_connection
+        session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
+        consumer   = session.create_consumer(@destination, criteria_for_receiving[:selector])
+        
+        # Prepara a conexao para receber mensagens
+        connection.start
+        
+        # Inicia o recebimento de mensagens
+        timeout = criteria_for_receiving[:timeout] || DEFAULT_RECEIVER_TIMEOUT
+        
         while (received_message = consumer.receive(timeout))
           # Inclui o modulo de identificacao de mensagem, util para o message_handler
           class << received_message

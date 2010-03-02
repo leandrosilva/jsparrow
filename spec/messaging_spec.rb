@@ -66,7 +66,23 @@ describe JSparrow::Messaging do
       received_id_long.should eql my_id_long
     end
   
-    it 'should send messages a lot and next receive it' do
+  it 'should send a message and next receive it with criterias' do
+    my_text = 'Mensagem de texto enviada da spec'
+  
+    @sender.send_text_message(my_text) do |msg|
+      msg.set_string_property('recipient', 'jsparrow-spec')
+    end
+  
+    received_text = nil
+  
+    @receiver.receive_message(:timeout => 1000, :selector => "recipient = 'jsparrow-spec'") do |msg|
+      received_text = msg.text
+    end
+  
+    received_text.should eql my_text
+  end
+
+    it 'should send messages a lot and next receive it with criterias' do
       my_text = 'Mensagem de texto enviada da spec'
     
       my_object = java.util.ArrayList.new
@@ -99,7 +115,7 @@ describe JSparrow::Messaging do
       received_object  = nil
       received_id_long = nil
     
-      @receiver.receive_message(:timeout => 1000, :selector => "recipient = 'jsparrow-spec'") do |msg|
+      @receiver.receive_messages(:timeout => 1000, :selector => "recipient = 'jsparrow-spec'") do |msg|
         if msg.is_text_message?
           received_text = msg.text
         end
