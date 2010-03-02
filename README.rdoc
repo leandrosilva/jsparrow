@@ -2,6 +2,8 @@
 
 JSparrow is a JMS client based on JRuby. Previously it has been called Sparrow, but changed his name because has another project with the same name.
 
+WARNING: I'm sorry but any time I break backward compatibility. However, always is for make a better API.
+
 === Install
 
 Make gem install:
@@ -21,17 +23,17 @@ WARNING: OpenJMS will be used as JMS provider, but any other could be used with 
 
 2) Setup indispensable informations to connect your JMS provider
 
-  JSparrow::Connection.configure do |connection|
-    connection.use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
+  JSparrow::Connection.configure do
+    use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
 
-    connection.use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
-                                   :provider_url            => 'tcp://localhost:3035'
-                                 # :security_principal      => 'user',
-                                 # :security_credentials    => 'password'
+    use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
+                        :provider_url            => 'tcp://localhost:3035'
+                      # :security_principal      => 'user',
+                      # :security_credentials    => 'password'
 
-    connection.enable_connection_factories :queue_connection_factory => 'ConnectionFactory'
+    enable_connection_factories :queue_connection_factory => 'ConnectionFactory'
     
-    connection.enable_queues :my_queue => 'MyQueue'
+    enable_queues :my_queue => 'MyQueue'
   end
 
 3) Create the client and start it
@@ -71,6 +73,12 @@ jsparrow rocks! =)
 Or, if you don't want write code, only do it:
 
   jruby sample/sample_queue.rb
+
+=== Next
+
+For more informations, read the specs! ;)
+
+http://github.com/leandrosilva/jsparrow/tree/master/spec/
 
 == Copyright
 
