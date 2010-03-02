@@ -2,7 +2,7 @@
 
 JSparrow is a JMS client based on JRuby. Previously it has been called Sparrow, but changed his name because has another project with the same name.
 
-WARNING: I'm sorry but any time I break backward compatibility. However, always is for make a better API.
+I'm sorry but any time I break backward compatibility. However, always is for make a better API.
 
 === Install
 
@@ -78,7 +78,7 @@ Or, if you don't want write code, only do it:
 
 For more informations, read the specs! ;)
 
-http://github.com/leandrosilva/jsparrow/tree/master/spec/
+http://github.com/leandrosilva/jsparrow/tree/master/spec
 
 == Copyright
 
