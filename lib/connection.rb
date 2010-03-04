@@ -83,6 +83,10 @@ module JSparrow
       #
       # Metodo usado para criar um novo Listener de mensagens JMS.
       #
+      # Use:
+      #
+      #   new_listener(:as => ListenerClass)
+      #
       def new_listener(listener_spec)
         listener_spec[:as].new(new_connection)
       end
@@ -90,6 +94,15 @@ module JSparrow
       #
       # Metodo usado para construir Listener de mensagens JMS. Deve receber um Hash com os parametros do
       # listener e um bloco que sera usado para tratar atender ao metodo on_receive_message.
+      #
+      # Use:
+      #
+      #   create_listener(
+      #     :queue => { :registered_name_of_queue },
+      #     :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'" }
+      #   ) do |received_message|
+      #     # do something
+      #   end
       #
       def create_listener(listener_spec, &on_receive_message)
         listener = JSparrow::Connection::Listener.new(new_connection)
