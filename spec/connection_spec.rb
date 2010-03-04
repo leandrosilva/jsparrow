@@ -38,14 +38,14 @@ describe JSparrow::Connection do
       jms_client.class.should be JSparrow::Connection::Client
     end
   
-    it 'should allow create a new Listener' do
-      jms_listener = new_jms_listener
+    it 'should allow create a new named Listener' do
+      jms_listener = new_named_jms_listener
     
       jms_listener.class.superclass.should be JSparrow::Connection::Listener
     end
     
-    it 'should create a new listener already configured' do
-      jms_listener = create_jms_listener
+    it 'should allow create a new anonymous Listener' do
+      jms_listener = new_anonymous_jms_listener
       jms_listener.class.should be JSparrow::Connection::Listener
       
       lambda{ jms_listener.on_receive_message(nil) }.should_not raise_error

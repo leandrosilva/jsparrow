@@ -3,7 +3,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 describe JSparrow::Connection::Listener do
 
   subject do
-    new_jms_listener
+    new_named_jms_listener
   end
 
   context 'When inherited for listening a queue' do

@@ -87,34 +87,23 @@ module JSparrow
       #
       #   new_listener(:as => ListenerClass)
       #
-      def new_listener(listener_spec)
-        listener_spec[:as].new(new_connection)
-      end
-      
+      # ou
       #
-      # Metodo usado para construir Listener de mensagens JMS. Deve receber um Hash com os parametros do
-      # listener e um bloco que sera usado para tratar atender ao metodo on_receive_message.
-      #
-      # Use:
-      #
-      #   create_listener(
+      #   new_listener(
       #     :queue => :registered_name_of_queue,
       #     :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'" }
       #   ) do |received_message|
       #     # do something
       #   end
       #
-      def create_listener(listener_spec, &on_receive_message)
-        listener = JSparrow::Connection::Listener.new(new_connection)
+      def new_listener(listener_spec, &block)
+        is_anonymous_listener = listener_spec[:as].nil?
         
-        (class << listener; self; end;).class_eval do
-          listen_to listener_spec[:listen_to] if listener_spec[:listen_to]
-          receive_only_in_criteria listener_spec[:receive_only_in_criteria] if listener_spec[:receive_only_in_criteria]
-        
-          define_method(:on_receive_message, &on_receive_message)
+        if is_anonymous_listener
+          new_anonymous_listener(listener_spec, &block)
+        else
+          new_named_listener(listener_spec)
         end
-        
-        listener
       end
 
       # --- Private methods --- #
@@ -127,6 +116,29 @@ module JSparrow
           jndi_context_builder = JNDI::ContextBuilder.new(configuration.jms_client_jar, configuration.jndi_properties)
         
           connection = Base.new(configuration, jndi_context_builder)
+        end
+        
+        #
+        # Metodo usado para construir Listener de mensagens JMS declarado.
+        #
+        def new_named_listener(listener_spec)
+          listener_spec[:as].new(new_connection)
+        end
+      
+        #
+        # Metodo usado para construir Listener de mensagens JMS anonimo.
+        #
+        def new_anonymous_listener(listener_spec, &on_receive_message)
+          listener = JSparrow::Connection::Listener.new(new_connection)
+        
+          (class << listener; self; end;).class_eval do
+            listen_to listener_spec[:listen_to] if listener_spec[:listen_to]
+            receive_only_in_criteria listener_spec[:receive_only_in_criteria] if listener_spec[:receive_only_in_criteria]
+        
+            define_method(:on_receive_message, &on_receive_message)
+          end
+        
+          listener
         end
     end
 
