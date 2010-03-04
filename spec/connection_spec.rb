@@ -33,7 +33,7 @@ describe JSparrow::Connection do
     end
   
     it 'should allow create a new Client' do
-      jms_client = create_jms_client
+      jms_client = new_jms_client
     
       jms_client.class.should be JSparrow::Connection::Client
     end
@@ -50,6 +50,5 @@ describe JSparrow::Connection do
       
       lambda{ jms_listener.on_receive_message(nil) }.should_not raise_error
     end
-    
   end
 end

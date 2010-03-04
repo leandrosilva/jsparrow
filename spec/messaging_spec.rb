@@ -5,7 +5,7 @@ describe JSparrow::Messaging do
   context 'When have a Sender and a Receiver for a Queue' do
   
     before(:all) do
-      @jms_client = create_jms_client
+      @jms_client = new_jms_client
       @jms_client.start
     
       @sender   = @jms_client.queue_sender(:test_queue)

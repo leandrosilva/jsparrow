@@ -26,7 +26,7 @@ module JSparrowHelperMethods
     end
   end
 
-  def create_jms_client
+  def new_jms_client
     configure_connection
     
     JSparrow::Connection.new_client
@@ -46,7 +46,7 @@ module JSparrowHelperMethods
   end
   
   def send_message_to_listener(listener_name)
-    @jms_client = create_jms_client
+    @jms_client = new_jms_client
     @jms_client.start
     
     my_text = 'Mensagem de texto enviada da spec para o listener TestQueueListener'

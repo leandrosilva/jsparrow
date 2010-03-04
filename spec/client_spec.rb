@@ -3,7 +3,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 describe JSparrow::Connection::Client do
 
   subject do
-    create_jms_client
+    new_jms_client
   end
   
   context 'When created' do
