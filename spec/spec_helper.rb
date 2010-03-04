@@ -42,6 +42,7 @@ module JSparrowHelperMethods
     listener = JSparrow::Connection.create_listener(:topic => :test_topic) do |received_message|
       # do some thing
     end
+    
     listener
   end
   
