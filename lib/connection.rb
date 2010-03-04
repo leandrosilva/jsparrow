@@ -95,13 +95,14 @@ module JSparrow
       # Metodo usado para construir um listener, deve receber um Hash com os parametros do listener e um bloco que sera usado no metodo on_receive_message
       #
       def create_listener(params, &block)
-        JSparrow::Connection::Listener.listen_to(params[:listen_to]) if params[:listen_to]
-        JSparrow::Connection::Listener.receive_only_in_criteria(params[:receive_only_in_criteria]) if params[:receive_only_in_criteria]
-        
         listener = JSparrow::Connection::Listener.new(new_connection)
         (class << listener; self; end;).class_eval do
+          listen_to params[:listen_to] if params[:listen_to]
+          receive_only_in_criteria params[:receive_only_in_criteria] if params[:receive_only_in_criteria]
           define_method(:on_receive_message, &block)
-        end 
+        end
+        
+        listener
       end
               
 

@@ -32,10 +32,17 @@ module JSparrowHelperMethods
     JSparrow::Connection.new_client
   end
   
-  def create_jms_listener
+  def new_jms_listener
     configure_connection
     
     JSparrow::Connection.new_listener :as => JSparrowHelperClasses::TestQueueListener
+  end
+  
+  def create_jms_listener
+    listener = JSparrow::Connection.create_listener(:topic => :test_topic) do |received_message|
+      # do some thing
+    end
+    listener
   end
   
   def send_message_to_listener(listener_name)

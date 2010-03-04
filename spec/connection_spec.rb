@@ -39,9 +39,17 @@ describe JSparrow::Connection do
     end
   
     it 'should allow create a new Listener' do
-      jms_listener = create_jms_listener
+      jms_listener = new_jms_listener
     
       jms_listener.class.superclass.should be JSparrow::Connection::Listener
     end
+    
+    it 'should create a new listener already configured' do
+      jms_listener = create_jms_listener
+      jms_listener.class.should be JSparrow::Connection::Listener
+      
+      lambda{ jms_listener.on_receive_message }.should_not raise_error
+    end
+    
   end
 end
