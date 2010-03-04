@@ -12,11 +12,7 @@ module JSparrow
       def configure(&block)
         @@configuration = Configuration.new
         
-        if block_given?
-          class_eval(&block)
-        else
-          block.call
-        end
+        class_eval(&block)
         
         @@configuration
       end
