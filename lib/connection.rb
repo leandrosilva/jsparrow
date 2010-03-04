@@ -12,7 +12,11 @@ module JSparrow
       def configure(&block)
         @@configuration = Configuration.new
         
-        class_eval(&block)
+        if block_given?
+          class_eval(&block)
+        else
+          block.call
+        end
         
         @@configuration
       end
@@ -86,6 +90,20 @@ module JSparrow
       def new_listener(listener_spec)
         listener_spec[:as].new(new_connection)
       end
+      
+      #
+      # Metodo usado para construir um listener, deve receber um Hash com os parametros do listener e um bloco que sera usado no metodo on_receive_message
+      #
+      def create_listener(params, &block)
+        JSparrow::Connection::Listener.listen_to(params[:listen_to]) if params[:listen_to]
+        JSparrow::Connection::Listener.receive_only_in_criteria(params[:receive_only_in_criteria]) if params[:receive_only_in_criteria]
+        
+        listener = JSparrow::Connection::Listener.new(new_connection)
+        (class << listener; self; end;).class_eval do
+          define_method(:on_receive_message, &block)
+        end 
+      end
+              
 
       # --- Private methods --- #
       private
