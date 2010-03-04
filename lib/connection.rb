@@ -98,7 +98,7 @@ module JSparrow
       # Use:
       #
       #   create_listener(
-      #     :queue => { :registered_name_of_queue },
+      #     :queue => :registered_name_of_queue,
       #     :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'" }
       #   ) do |received_message|
       #     # do something
