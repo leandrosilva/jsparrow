@@ -88,7 +88,8 @@ module JSparrow
       end
       
       #
-      # Metodo usado para construir um listener, deve receber um Hash com os parametros do listener e um bloco que sera usado no metodo on_receive_message
+      # Metodo usado para construir um listener, deve receber um Hash com os parametros do listener e um bloco
+      # que sera usado no metodo on_receive_message.
       #
       def create_listener(params, &block)
         listener = JSparrow::Connection::Listener.new(new_connection)
@@ -99,8 +100,7 @@ module JSparrow
         end
         
         listener
-      end
-              
+      end              
 
       # --- Private methods --- #
       private

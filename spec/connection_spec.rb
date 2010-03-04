@@ -48,7 +48,7 @@ describe JSparrow::Connection do
       jms_listener = create_jms_listener
       jms_listener.class.should be JSparrow::Connection::Listener
       
-      lambda{ jms_listener.on_receive_message }.should_not raise_error
+      lambda{ jms_listener.on_receive_message(nil) }.should_not raise_error
     end
     
   end
