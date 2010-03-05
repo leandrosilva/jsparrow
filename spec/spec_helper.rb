@@ -88,7 +88,7 @@ module JSparrowHelperClasses
     end
   
     def on_receive_message(received_message)
-      @received_messages << received_messages
+      @received_messages << received_message
     end
   end
 end
