@@ -70,7 +70,6 @@ module JSparrowHelperMethods
 end
 
 module JSparrowHelperClasses
-  
   #
   # Listener da queue TestQueue
   #
