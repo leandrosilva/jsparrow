@@ -70,7 +70,7 @@ module JSparrow
         producer   = session.create_producer(@destination)
         
         class << session
-          include JSparrow::JMS::OverrideSessionMethods
+          include JMS::OverrideSessionMethods
         end
         
         # Passa o controle para quem trata a emissao de mensagens
@@ -90,7 +90,7 @@ module JSparrow
           producer   = session.create_producer(@destination)
         
           class << session
-            include JSparrow::JMS::OverrideSessionMethods
+            include JMS::OverrideSessionMethods
           end
         
           # Obtem uma mensagem (TextMessage, ObjectMessage ou MapMessage) do criador especifico
@@ -126,7 +126,7 @@ module JSparrow
           session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
       
           class << session
-            include JSparrow::JMS::OverrideSessionMethods
+            include JMS::OverrideSessionMethods
           end
 
           consumer = session.create_consumer(@destination, criteria_for_receiving[:selector])
