@@ -41,13 +41,13 @@ describe JSparrow::Connection do
     it 'should allow create a new named Listener' do
       jms_listener = new_named_jms_listener
     
-      jms_listener.class.superclass.should be JSparrow::Connection::Listener
+      jms_listener.class.superclass.should be JSparrow::Listener
     end
     
     it 'should allow create a new anonymous Listener' do
       jms_listener = new_anonymous_jms_listener
       
-      jms_listener.class.should be JSparrow::Connection::Listener
+      jms_listener.class.should be JSparrow::Listener
       jms_listener.respond_to?(:on_receive_message).should be true
     end
   end

@@ -130,7 +130,7 @@ module JSparrow
         # Metodo usado para construir Listener de mensagens JMS anonimo.
         #
         def new_anonymous_listener(listener_spec, &on_receive_message)
-          listener = JSparrow::Connection::Listener.new(new_connection)
+          listener = JSparrow::Listener.new(new_connection)
         
           (class << listener; self; end;).class_eval do
             listen_to listener_spec[:listen_to] if listener_spec[:listen_to]

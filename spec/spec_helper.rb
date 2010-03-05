@@ -74,7 +74,7 @@ module JSparrowHelperClasses
   #
   # Listener da queue TestQueue
   #
-  class TestQueueListener < JSparrow::Connection::Listener
+  class TestQueueListener < JSparrow::Listener
     listen_to :queue => :test_queue
   
     receive_only_in_criteria :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'"

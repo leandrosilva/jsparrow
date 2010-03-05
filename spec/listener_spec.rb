@@ -1,6 +1,6 @@
 require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
-describe JSparrow::Connection::Listener do
+describe JSparrow::Listener do
 
   context 'When inherited and created' do
 
