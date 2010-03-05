@@ -35,7 +35,7 @@ describe JSparrow::Connection do
     it 'should allow create a new Client' do
       jms_client = new_jms_client
     
-      jms_client.class.should be JSparrow::Connection::Client
+      jms_client.class.should be JSparrow::Client
     end
   
     it 'should allow create a new named Listener' do
