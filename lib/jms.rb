@@ -35,8 +35,8 @@ module JSparrow
       
           def enriches_message(message)
             class << message
-              include Message::EnrichesWithTyping
-              include Message::EnrichesWithCriteria
+              include Message::TypingMethods
+              include Message::CriteriaMethods
             end
           
             message
@@ -72,7 +72,7 @@ module JSparrow
       
           def enriches_message(message)
             class << message
-              include Message::EnrichesWithTyping
+              include Message::TypingMethods
             end
           
             message
@@ -84,7 +84,7 @@ module JSparrow
       #
       # Identifica o tipo de uma mensagem.
       #
-      module EnrichesWithTyping
+      module TypingMethods
         def is_text_message?
           respond_to? :get_text
         end
@@ -101,7 +101,7 @@ module JSparrow
       #
       # Adiciona criterios a mensagem.
       #
-      module EnrichesWithCriteria
+      module CriteriaMethods
         def add_criteria_to_reception(name, value)
           set_string_property(name, value)
         end
