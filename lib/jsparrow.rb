@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift(File.dirname(File.expand_path(__FILE__)))
 
-# Bibliotecas necessarias usar JMS
-require 'jms.rb'
+# Bibliotecas necessarias para usar JMS
+require 'javaee.rb'
 
 # Bibliotecas do JSparrow
 require 'connection.rb'
