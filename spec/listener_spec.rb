@@ -23,6 +23,8 @@ describe JSparrow::Connection::Listener do
     end
   
     it 'should receive a message' do
+      subject.received_messages.size.should eql 0
+
       send_message_to_listener 'TestQueueListener'
     
       subject.start_listening
@@ -56,8 +58,8 @@ describe JSparrow::Connection::Listener do
     end
   
     it 'should receive a message' do
-      subject.respond_to?(:one_message_received).should be false
-      
+      subject.received_messages.size.should eql 0
+
       send_message_to_listener 'anonymous'
     
       subject.start_listening

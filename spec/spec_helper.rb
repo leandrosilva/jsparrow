@@ -43,14 +43,12 @@ module JSparrowHelperMethods
         :listen_to => { :queue => :test_queue },
         :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'anonymous'" }
       ) do |received_message|
-      @received_messages ||= []
-      @received_messages << received_message
+        
+      received_messages << received_message
     end
     
-    # adicionando este comportamento para 
-    # pode obter a qtde. de mensagens recebidas
     def listener.received_messages
-      @received_messages
+      @received_messages ||= []
     end
     
     listener
@@ -94,6 +92,7 @@ module JSparrowHelperClasses
     end
   end
 end
+
 #
 # Enriquece a classe Spec::Example::ExampleGroup com o helper.
 #
