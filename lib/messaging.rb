@@ -69,7 +69,9 @@ module JSparrow
         session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
         producer   = session.create_producer(@destination)
         
-        MessageCriteria.apply!(session)
+        class << session
+          include OverrideSessionMethods
+        end
         
         # Passa o controle para quem trata a emissao de mensagens
         message_sender.call(session, producer)
@@ -87,7 +89,9 @@ module JSparrow
           session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
           producer   = session.create_producer(@destination)
         
-          MessageCriteria.apply!(session)
+          class << session
+            include OverrideSessionMethods
+          end
         
           # Obtem uma mensagem (TextMessage, ObjectMessage ou MapMessage) do criador especifico
           message = message_creator.call(session)
@@ -168,43 +172,37 @@ module JSparrow
     # Adiciona criterios a mensagem.
     #
     module MessageCriteria
-      def self.apply!(session)
-        class << session
-          def create_text_message(text_message)
-            created_message = super(text_message)
-
-            class << created_message
-              include Messaging::MessageCriteria
-            end
-
-            created_message
-          end
-
-          def create_object_message(object_message)
-            created_message = super(object_message)
-            
-            class << created_message
-              include Messaging::MessageCriteria
-            end
-            
-            created_message
-          end
-
-          def create_map_message
-            created_message = super
-            
-            class << created_message
-              include Messaging::MessageCriteria
-            end
-            
-            created_message
-          end
-        end
-      end
-      
       def add_criteria_to_reception(name, value)
         set_string_property(name, value)
       end
+    end
+    
+    #
+    # Sobrescreve metodos do objeto session.
+    #
+    module OverrideSessionMethods
+      def create_text_message(text_message)
+        enriches super(text_message)
+      end
+
+      def create_object_message(object_message)
+        enriches super(object_message)
+      end
+
+      def create_map_message
+        enriches super
+      end
+      
+      # --- Private methods -- #
+      private
+      
+        def enriches(message)
+          class << message
+            include Messaging::MessageCriteria
+          end
+          
+          message
+        end
     end
   end
 end
