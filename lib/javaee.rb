@@ -110,7 +110,6 @@ module JSparrow
   end
 
   module JNDI
-    
     #
     # Builder para construcao de contexto JNDI para conexao com o provedor
     # de JMS.
