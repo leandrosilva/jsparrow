@@ -124,7 +124,12 @@ module JSparrow
           # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
           connection = @connection_factory.create_connection
           session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
-          consumer   = session.create_consumer(@destination, criteria_for_receiving[:selector])
+      
+          class << session
+            include OverrideSessionMethods
+          end
+
+          consumer = session.create_consumer(@destination, criteria_for_receiving[:selector])
         
           # Prepara a conexao para receber mensagens
           connection.start
@@ -137,10 +142,6 @@ module JSparrow
         
           eval %Q{
             #{conditional_keyword} (received_message = consumer.receive(timeout))
-              class << received_message
-                include MessageType
-              end
-
               # Delega o tratamento da mensagem para o bloco recebido
               message_handler.call(received_message)
             end
@@ -193,12 +194,50 @@ module JSparrow
         enriches_message super
       end
       
+      def create_consumer(destination, criteria_for_receiving)
+        enriches_consumer super(destination, criteria_for_receiving)
+      end
+      
       # --- Private methods -- #
       private
       
         def enriches_message(message)
           class << message
             include Messaging::MessageCriteria
+          end
+          
+          message
+        end
+        
+        def enriches_consumer(consumer)
+          class << consumer
+            include Messaging::OverrideConsumerMethods
+          end
+          
+          consumer
+        end
+    end
+    
+    #
+    # Sobrescreve metodos do objeto consumidor.
+    #
+    module OverrideConsumerMethods
+      def receive(timeout)
+        received_message = super(timeout)
+        
+        if received_message.nil?
+          received_message
+        else
+          enriches_message received_message
+        end
+      end
+      
+      # --- Private methods -- #
+      private
+      
+        def enriches_message(message)
+          class << message
+            include MessageType
           end
           
           message
