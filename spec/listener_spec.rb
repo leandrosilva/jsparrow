@@ -63,8 +63,9 @@ describe JSparrow::Connection::Listener do
       subject.start_listening
     
       sleep 1 # espera um pouquinho pra mensagem ser entregue
-    
-      subject.respond_to?(:one_message_received).should be true
+      
+      # verify if message was received
+      subject.received_messages.size.should eql 1
 
       subject.stop_listening
     end
