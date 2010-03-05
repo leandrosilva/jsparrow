@@ -10,12 +10,12 @@ module JSparrowHelperMethods
 
   def configure_connection
     JSparrow::Connection.configure do
-      use_jms_client_jar '/opt/openjms/lib/openjms-0.7.7-beta-1.jar'
+      use_jms_client_jar '/Users/alan/Oracle/Middleware/wlserver_10.3/server/lib/weblogic.jar'
 
-      use_jndi_properties :initial_context_factory => 'org.exolab.jms.jndi.InitialContextFactory',
-                          :provider_url            => 'tcp://localhost:3035'
-                        # :security_principal      => 'user',
-                        # :security_credentials    => 'password'
+      use_jndi_properties :initial_context_factory => 'weblogic.jndi.WLInitialContextFactory',
+                                     :provider_url            => 't3://localhost:7001',
+                                     :security_principal      => 'weblogic',
+                                     :security_credentials    => 'weblogic123'
       
       enable_connection_factories :queue_connection_factory => 'ConnectionFactory', 
                                   :topic_connection_factory => 'ConnectionFactory'
@@ -43,12 +43,14 @@ module JSparrowHelperMethods
         :listen_to => { :queue => :test_queue },
         :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'anonymous'" }
       ) do |received_message|
-      
-      class << self
-        define_method :one_message_received do
-          "Yes, that's very ungly. But it's only for easy test. I'm sorry!"
-        end
-      end
+      @received_messages ||= []
+      @received_messages << received_message
+    end
+    
+    # adicionando este comportamento para 
+    # pode obter a qtde. de mensagens recebidas
+    def listener.received_messages
+      @received_messages
     end
     
     listener
@@ -88,7 +90,7 @@ module JSparrowHelperClasses
     end
   
     def on_receive_message(received_message)
-      @received_messages << received_messages
+      @received_messages << received_message
     end
   end
 end
