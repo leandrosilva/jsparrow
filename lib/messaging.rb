@@ -70,7 +70,7 @@ module JSparrow
         producer   = session.create_producer(@destination)
         
         class << session
-          include OverrideSessionMethods
+          include JSparrow::JMS::OverrideSessionMethods
         end
         
         # Passa o controle para quem trata a emissao de mensagens
@@ -90,7 +90,7 @@ module JSparrow
           producer   = session.create_producer(@destination)
         
           class << session
-            include OverrideSessionMethods
+            include JSparrow::JMS::OverrideSessionMethods
           end
         
           # Obtem uma mensagem (TextMessage, ObjectMessage ou MapMessage) do criador especifico
@@ -126,7 +126,7 @@ module JSparrow
           session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
       
           class << session
-            include OverrideSessionMethods
+            include JSparrow::JMS::OverrideSessionMethods
           end
 
           consumer = session.create_consumer(@destination, criteria_for_receiving[:selector])
@@ -176,72 +176,6 @@ module JSparrow
       def add_criteria_to_reception(name, value)
         set_string_property(name, value)
       end
-    end
-    
-    #
-    # Sobrescreve metodos do objeto session.
-    #
-    module OverrideSessionMethods
-      def create_text_message(text_message)
-        enriches_message super(text_message)
-      end
-
-      def create_object_message(object_message)
-        enriches_message super(object_message)
-      end
-
-      def create_map_message
-        enriches_message super
-      end
-      
-      def create_consumer(destination, criteria_for_receiving)
-        enriches_consumer super(destination, criteria_for_receiving)
-      end
-      
-      # --- Private methods -- #
-      private
-      
-        def enriches_message(message)
-          class << message
-            include Messaging::MessageCriteria
-          end
-          
-          message
-        end
-        
-        def enriches_consumer(consumer)
-          class << consumer
-            include Messaging::OverrideConsumerMethods
-          end
-          
-          consumer
-        end
-    end
-    
-    #
-    # Sobrescreve metodos do objeto consumidor.
-    #
-    module OverrideConsumerMethods
-      def receive(timeout)
-        received_message = super(timeout)
-        
-        if received_message.nil?
-          received_message
-        else
-          enriches_message received_message
-        end
-      end
-      
-      # --- Private methods -- #
-      private
-      
-        def enriches_message(message)
-          class << message
-            include MessageType
-          end
-          
-          message
-        end
     end
   end
 end
