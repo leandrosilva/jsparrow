@@ -39,8 +39,16 @@ module JSparrowHelperMethods
   end
   
   def new_anonymous_jms_listener
-    listener = JSparrow::Connection.new_listener(:topic => :test_topic) do |received_message|
-      # do some thing
+    listener = JSparrow::Connection.new_listener(
+        :listen_to => { :queue => :test_queue },
+        :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'anonymous'" }
+      ) do |received_message|
+      
+      class << self
+        define_method :one_message_received do
+          "Yes, that's very ungly. But it's only for easy test. I'm sorry!"
+        end
+      end
     end
     
     listener
@@ -50,7 +58,7 @@ module JSparrowHelperMethods
     @jms_client = new_jms_client
     @jms_client.start
     
-    my_text = 'Mensagem de texto enviada da spec para o listener TestQueueListener'
+    my_text = "Mensagem de texto enviada da spec para o listener #{listener_name}"
     
     @jms_client.queue_sender(:test_queue).send_text_message(my_text) do |msg|
       msg.set_string_property('recipient',   'jsparrow-spec')

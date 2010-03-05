@@ -107,7 +107,7 @@ module JSparrow
       private
 
         def self.configure(attribute, value)
-          self.instance_eval do
+          instance_eval do
             send(:define_method, attribute) do
               value
             end

@@ -90,17 +90,18 @@ module JSparrow
       # ou
       #
       #   new_listener(
-      #     :queue => :registered_name_of_queue,
-      #     :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'" }
-      #   ) do |received_message|
+      #     :listen_to => { :queue => :registered_name_of_queue },
+      #     :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec'" }
+      #     ) do |received_message|
+      
       #     # do something
       #   end
       #
-      def new_listener(listener_spec, &block)
+      def new_listener(listener_spec, &on_receive_message)
         is_anonymous_listener = listener_spec[:as].nil?
         
         if is_anonymous_listener
-          new_anonymous_listener(listener_spec, &block)
+          new_anonymous_listener(listener_spec, &on_receive_message)
         else
           new_named_listener(listener_spec)
         end
@@ -134,7 +135,7 @@ module JSparrow
           (class << listener; self; end;).class_eval do
             listen_to listener_spec[:listen_to] if listener_spec[:listen_to]
             receive_only_in_criteria listener_spec[:receive_only_in_criteria] if listener_spec[:receive_only_in_criteria]
-        
+            
             define_method(:on_receive_message, &on_receive_message)
           end
         
