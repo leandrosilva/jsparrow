@@ -151,31 +151,5 @@ module JSparrow
           connection.close
         end
     end
-  
-    #
-    # Identifica o tipo de uma mensagem.
-    #
-    module MessageType
-      def is_text_message?
-        respond_to? :get_text
-      end
-    
-      def is_object_message?
-        (respond_to? :get_object and !(respond_to? :get_long))
-      end
-    
-      def is_map_message?
-        respond_to? :get_long
-      end
-    end
-    
-    #
-    # Adiciona criterios a mensagem.
-    #
-    module MessageCriteria
-      def add_criteria_to_reception(name, value)
-        set_string_property(name, value)
-      end
-    end
   end
 end

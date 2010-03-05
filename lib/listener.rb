@@ -87,7 +87,7 @@ module JSparrow
       #
       def on_message(received_message)
         class << received_message
-          include Messaging::MessageType
+          include JMS::MessageType
         end
         
         on_receive_message(received_message)
