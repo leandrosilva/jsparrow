@@ -182,21 +182,21 @@ module JSparrow
     #
     module OverrideSessionMethods
       def create_text_message(text_message)
-        enriches super(text_message)
+        enriches_message super(text_message)
       end
 
       def create_object_message(object_message)
-        enriches super(object_message)
+        enriches_message super(object_message)
       end
 
       def create_map_message
-        enriches super
+        enriches_message super
       end
       
       # --- Private methods -- #
       private
       
-        def enriches(message)
+        def enriches_message(message)
           class << message
             include Messaging::MessageCriteria
           end
