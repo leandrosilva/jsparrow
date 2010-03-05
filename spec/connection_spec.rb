@@ -48,7 +48,7 @@ describe JSparrow::Connection do
       jms_listener = new_anonymous_jms_listener
       jms_listener.class.should be JSparrow::Connection::Listener
       
-      lambda{ jms_listener.on_receive_message(nil) }.should_not raise_error
+      jms_listener.respond_to?(:on_receive_message).should be true
     end
   end
 end
