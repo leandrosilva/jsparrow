@@ -20,7 +20,7 @@ describe JSparrow::Messaging do
       my_text = 'Mensagem de texto enviada da spec'
     
       @sender.send_text_message(my_text) do |msg|
-        msg.set_string_property('recipient', 'jsparrow-spec')
+        msg.add_criteria_to_reception('recipient', 'jsparrow-spec')
       end
     
       received_text = nil
@@ -37,7 +37,7 @@ describe JSparrow::Messaging do
       my_object << 'Obj1 enviado da spec'
     
       @sender.send_object_message(my_object) do |msg|
-        msg.set_string_property('recipient', 'jsparrow-spec')
+        msg.add_criteria_to_reception('recipient', 'jsparrow-spec')
       end
     
       received_object = nil
@@ -53,7 +53,7 @@ describe JSparrow::Messaging do
       my_id_long = 1234567
     
       @sender.send_map_message do |msg|
-        msg.set_string_property('recipient', 'jsparrow-spec')
+        msg.add_criteria_to_reception('recipient', 'jsparrow-spec')
         msg.set_long('id', my_id_long)
       end
     
@@ -70,7 +70,7 @@ describe JSparrow::Messaging do
     my_text = 'Mensagem de texto enviada da spec'
   
     @sender.send_text_message(my_text) do |msg|
-      msg.set_string_property('recipient', 'jsparrow-spec')
+      msg.add_criteria_to_reception('recipient', 'jsparrow-spec')
     end
   
     received_text = nil
@@ -93,17 +93,17 @@ describe JSparrow::Messaging do
       @sender.send_messages do |session, producer|
         #--- TextMessage
         text_message = session.create_text_message(my_text)
-        text_message.set_string_property('recipient', 'jsparrow-spec')
+        text_message.add_criteria_to_reception('recipient', 'jsparrow-spec')
         producer.send(text_message)
       
         #--- objectMessage
         object_message = session.create_object_message(my_object)
-        object_message.set_string_property('recipient', 'jsparrow-spec')
+        object_message.add_criteria_to_reception('recipient', 'jsparrow-spec')
         producer.send(object_message)
       
         #--- MapMessage
         map_message = session.create_map_message
-        map_message.set_string_property('recipient', 'jsparrow-spec')
+        map_message.add_criteria_to_reception('recipient', 'jsparrow-spec')
         map_message.set_long('id', my_id_long)
         producer.send(map_message)
       

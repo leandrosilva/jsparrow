@@ -69,7 +69,9 @@ module JSparrow
         session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
         producer   = session.create_producer(@destination)
         
-        # Passa o controle que trata a emissao de mensagens
+        MessageCriteria.apply!(session)
+        
+        # Passa o controle para quem trata a emissao de mensagens
         message_sender.call(session, producer)
 
         # Fecha a conexao
@@ -84,6 +86,8 @@ module JSparrow
           connection = @connection_factory.create_connection
           session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
           producer   = session.create_producer(@destination)
+        
+          MessageCriteria.apply!(session)
         
           # Obtem uma mensagem (TextMessage, ObjectMessage ou MapMessage) do criador especifico
           message = message_creator.call(session)
@@ -129,7 +133,6 @@ module JSparrow
         
           eval %Q{
             #{conditional_keyword} (received_message = consumer.receive(timeout))
-              # Inclui o modulo de identificacao de mensagem, util para o message_handler
               class << received_message
                 include MessageType
               end
@@ -158,6 +161,49 @@ module JSparrow
     
       def is_map_message?
         respond_to? :get_long
+      end
+    end
+    
+    #
+    # Adiciona criterios a mensagem.
+    #
+    module MessageCriteria
+      def self.apply!(session)
+        class << session
+          def create_text_message(text_message)
+            created_message = super(text_message)
+
+            class << created_message
+              include Messaging::MessageCriteria
+            end
+
+            created_message
+          end
+
+          def create_object_message(object_message)
+            created_message = super(object_message)
+            
+            class << created_message
+              include Messaging::MessageCriteria
+            end
+            
+            created_message
+          end
+
+          def create_map_message
+            created_message = super
+            
+            class << created_message
+              include Messaging::MessageCriteria
+            end
+            
+            created_message
+          end
+        end
+      end
+      
+      def add_criteria_to_reception(name, value)
+        set_string_property(name, value)
       end
     end
   end

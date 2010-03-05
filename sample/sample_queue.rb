@@ -18,7 +18,7 @@ jms_client = JSparrow::Connection.new_client
 jms_client.start
 
 jms_client.queue_sender(:test_queue).send_text_message('jsparrow rocks!') do |msg|
-  msg.set_string_property('recipient', 'jsparrow-example')
+  msg.add_criteria_to_reception('recipient', 'jsparrow-example')
 end
 
 jms_client.queue_receiver(:test_queue).receive_message(

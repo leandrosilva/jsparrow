@@ -61,8 +61,8 @@ module JSparrowHelperMethods
     my_text = "Mensagem de texto enviada da spec para o listener #{listener_name}"
     
     @jms_client.queue_sender(:test_queue).send_text_message(my_text) do |msg|
-      msg.set_string_property('recipient',   'jsparrow-spec')
-      msg.set_string_property('to_listener', listener_name)
+      msg.add_criteria_to_reception('recipient',   'jsparrow-spec')
+      msg.add_criteria_to_reception('to_listener', listener_name)
     end
 
     @jms_client.stop
