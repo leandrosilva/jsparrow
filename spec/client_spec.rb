@@ -25,7 +25,7 @@ describe JSparrow::Client do
     
       lambda {
           subject.start
-        }.should raise_error JSparrow::Connection::InvalidStateError
+        }.should raise_error JSparrow::InvalidStateError
     
       subject.stop
     end
@@ -36,7 +36,7 @@ describe JSparrow::Client do
     
       lambda {
           subject.stop
-        }.should raise_error JSparrow::Connection::InvalidStateError
+        }.should raise_error JSparrow::InvalidStateError
     end
   end
   

@@ -3,7 +3,10 @@ import 'java.util.Hashtable'
 import 'javax.naming.InitialContext'
 
 module JSparrow
-  module Connection
+  #
+  # Classe base para estabelecer conexao com o provedor JMS via JNDI. 
+  #
+  class Connection
 
     class << self
       #
@@ -116,7 +119,7 @@ module JSparrow
         def new_connection
           jndi_context_builder = JNDI::ContextBuilder.new(configuration.jms_client_jar, configuration.jndi_properties)
         
-          connection = Base.new(configuration, jndi_context_builder)
+          connection = Connection.new(configuration, jndi_context_builder)
         end
         
         #
@@ -143,100 +146,95 @@ module JSparrow
         end
     end
 
-    #
-    # Classe base para estabelecer conexao com o provedor JMS via JNDI. 
-    #
-    class Base
-      attr_reader :configuration
-      
-      def initialize(configuration, jndi_context_builder)
-        @configuration        = configuration
-        @jndi_context_builder = jndi_context_builder
-
-        # Foi estabelecida?
-        @opened = false
-      end
-      
-      def is_opened?
-        @opened
-      end
-      
-      def open
-        raise InvalidStateError.new('opened', 'open') if is_opened?
+    attr_reader :configuration
     
-        begin
-          @jndi_context = @jndi_context_builder.build
-        rescue => cause
-          raise InitializationError.new(@configuration, cause)
-        end
-        
-        @opened = true
+    def initialize(configuration, jndi_context_builder)
+      @configuration        = configuration
+      @jndi_context_builder = jndi_context_builder
+
+      # Foi estabelecida?
+      @opened = false
+    end
+    
+    def is_opened?
+      @opened
+    end
+    
+    def open
+      raise InvalidStateError.new('opened', 'open') if is_opened?
+  
+      begin
+        @jndi_context = @jndi_context_builder.build
+      rescue => cause
+        raise InitializationError.new(@configuration, cause)
       end
       
-      def is_closed?
-        not @opened
-      end
-
-      def close
-        raise InvalidStateError.new('closed', 'close') if is_closed?
+      @opened = true
+    end
     
-        @jndi_context.close
-    
-        @opened = false  
-      end
-
-      def lookup_resources(resources = {})
-        lookuped_resource = {}
-
-        return lookuped_resource unless resources
-    
-        resources.each do |name, jndi_name|
-          lookuped_resource[name] = lookup_resource(jndi_name)
-        end
-
-        lookuped_resource
-      end
-      
-      def lookup_resource(jndi_name)
-        @jndi_context.lookup(jndi_name)
-      end
+    def is_closed?
+      not @opened
     end
 
-    #
-    # Configuracoes necessarias para que clientes JMS se conetem
-    # ao provedor de mensageria via contexto JNDI.
-    #
-    class Configuration
-      attr_accessor :jms_client_jar, :jndi_properties,
-                    :enabled_connection_factories, :enabled_queues, :enabled_topics
+    def close
+      raise InvalidStateError.new('closed', 'close') if is_closed?
+  
+      @jndi_context.close
+  
+      @opened = false  
     end
 
-    #
-    # Erro para quando uma conexao esta num estado invalido para uma operacao (open ou close).
-    #
-    class InvalidStateError < StandardError
-      attr_reader :state, :operation
+    def lookup_resources(resources = {})
+      lookuped_resource = {}
 
-      def initialize(state, operation)
-        super("Could not did #{operation} because connection is #{state}.")
-
-        @state     = state
-        @operation = operation
+      return lookuped_resource unless resources
+  
+      resources.each do |name, jndi_name|
+        lookuped_resource[name] = lookup_resource(jndi_name)
       end
+
+      lookuped_resource
     end
+    
+    def lookup_resource(jndi_name)
+      @jndi_context.lookup(jndi_name)
+    end
+  end
 
-    #
-    # Erro para quando nao for possivel estabelecer conexao com o provedor JMS.
-    #
-    class InitializationError < StandardError
-      attr_reader :configuration, :cause
+  #
+  # Configuracoes necessarias para que clientes JMS se conetem
+  # ao provedor de mensageria via contexto JNDI.
+  #
+  class Configuration
+    attr_accessor :jms_client_jar, :jndi_properties,
+                  :enabled_connection_factories, :enabled_queues, :enabled_topics
+  end
 
-      def initialize(configuration, cause)
-        super("Could not open connection to JMS provider. Verify the config's config.")
+  #
+  # Erro para quando uma conexao esta num estado invalido para uma operacao (open ou close).
+  #
+  class InvalidStateError < StandardError
+    attr_reader :state, :operation
 
-        @configuration = configuration
-        @cause         = cause
-      end
+    def initialize(state, operation)
+      super("Could not did #{operation} because connection is #{state}.")
+
+      @state     = state
+      @operation = operation
+    end
+  end
+
+  #
+  # Erro para quando nao for possivel estabelecer conexao com o provedor JMS.
+  #
+  class InitializationError < StandardError
+    attr_reader :configuration, :cause
+
+    def initialize(configuration, cause)
+      super("Could not open connection to JMS provider. Verify the config's config.")
+
+      @configuration = configuration
+      @cause         = cause
     end
   end
 end
