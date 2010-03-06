@@ -29,17 +29,17 @@ module JSparrowHelperMethods
   def new_jms_client
     configure_connection
     
-    JSparrow::Interaction.new_client
+    new_jsparrow_client
   end
   
   def new_named_jms_listener
     configure_connection
     
-    JSparrow::Interaction.new_listener :as => JSparrowHelperClasses::TestQueueListener
+    new_jsparrow_listener :as => JSparrowHelperClasses::TestQueueListener
   end
   
   def new_anonymous_jms_listener
-    listener = JSparrow::Interaction.new_listener(
+    listener = new_jsparrow_listener(
         :listen_to => { :queue => :test_queue },
         :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec' and to_listener = 'anonymous'" }
       ) do |received_message|

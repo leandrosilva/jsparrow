@@ -60,3 +60,11 @@ module JSparrow
     end
   end
 end
+
+def new_jsparrow_client
+  JSparrow::Interaction.new_client
+end
+
+def new_jsparrow_listener(listener_spec, &on_receive_message)
+  JSparrow::Interaction.new_listener(listener_spec, &on_receive_message)
+end
