@@ -4,7 +4,7 @@ require 'spec'
 require File.dirname(File.expand_path(__FILE__)) + '/../lib/jsparrow.rb'
 
 #
-# Modulo com metodos uteis para as specs.
+# Helper methods for specs.
 #
 module JSparrowHelperMethods
 
@@ -71,7 +71,7 @@ end
 
 module JSparrowHelperClasses
   #
-  # Listener da queue TestQueue
+  # Listener for test against "TestQueue" queue
   #
   class TestQueueListener < JSparrow::Listener
     listen_to :queue => :test_queue
@@ -93,7 +93,7 @@ module JSparrowHelperClasses
 end
 
 #
-# Enriquece a classe Spec::Example::ExampleGroup com o helper.
+# Some steroids for Spec::Example::ExampleGroup.
 #
 class Spec::Example::ExampleGroup
   include JSparrowHelperMethods
