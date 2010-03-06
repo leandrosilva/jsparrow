@@ -4,19 +4,19 @@ import 'javax.jms.MessageListener'
 
 module JSparrow
   #
-  # Ouvintes de mensagens.
-  #
-  # Sao como clientes JMS, mas apenas para recebimento de mensagens.
+  # Message listener.
   #
   class Listener
     include MessageListener
     
+    #
+    # Class methods to configure subclasses.
+    #
     class << self
       #
-      # Nome (configurado no setup da conexao) do destino JMS que sera escutado.
+      # Name (configured in connection setup) of JMS destination to listen to.
       #
-      # Invariavelmente deve ser usado pelas subclasses, para informar o nome da queue
-      # ou topico que sera escutado.
+      # Must be used by subclasses to configure destination.
       #
       # listen_to :queue => :registered_name_of_queue
       # listen_to :topic => :registered_name_of_topic
@@ -26,10 +26,9 @@ module JSparrow
       end
     
       #
-      # Criterios de selecao de mensagens, seguindo o padrao JMS.
+      # Selector criteria to receive the messages, following the JMS pattern.
       #
-      # Invariavelmente as subclasses precisam usar esse metodo, se quiserem definir
-      # os criterios de recebimento que este listener levara em conta.
+      # Should be used by subclasses when want to set criterias to message selection.
       #
       # receive_only_in_criteria :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'"
       #
@@ -56,9 +55,6 @@ module JSparrow
       @connection.is_opened?
     end
 
-    #
-    # Inicia a escuta de mensagens.
-    #
     def start_listening
       @connection.open
       
@@ -66,23 +62,16 @@ module JSparrow
       
       selector = criteria_to_receiving[:selector] if respond_to? :criteria_to_receiving
       
-      # Cria uma conexao para escuta de mensagens
       @listening_connection = connection_factory.create_connection
       
-      # Cria uma sessao e um consumidor de qualquer tipo de mensagem
       session  = @listening_connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
       consumer = session.create_consumer(destination, selector)
       
-      # Registra-se como ouvinte
       consumer.message_listener = self
       
-      # Inicia a escuta de mensagens
       @listening_connection.start
     end
     
-    #
-    # Finaliza a escuta de mensagens.
-    #
     def stop_listening
       @listening_connection.close
       
@@ -90,10 +79,7 @@ module JSparrow
     end
     
     #
-    # Faz o enriquecimento do objeto mensagem e delega para o metodo on_receive_message
-    # que, implementado pelas subclasses, efetivamente trata a mensagem.
-    #
-    # Nao deve ser re-implementado por subclasses.
+    # It's part of JMS Listener interface. Shouldn't be overrided by subclasses.
     #
     def on_message(received_message)
       class << received_message
@@ -104,10 +90,9 @@ module JSparrow
     end
     
     #
-    # E executado todas as vezes que chega uma mensagem que atenda aos criterios
-    # definido para este listener (na variavel de instancia @criteria_for_receiving).
+    # Callback mathod to receive enriched messages.
     #
-    # Invariavelmente deve ser re-implementado nas subclasses.
+    # Must be overrided by subclasses.
     #
     def on_receive_message(received_message)
       raise Error::AbstractMethodError.new(self.class.superclass, 'on_receive_message')
