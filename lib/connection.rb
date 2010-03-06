@@ -3,6 +3,15 @@ import 'java.util.Hashtable'
 import 'javax.naming.InitialContext'
 
 module JSparrow
+
+  #
+  # Configuracoes necessarias para que clientes JMS se conetem
+  # ao provedor de mensageria via contexto JNDI.
+  #
+  class Configuration
+    attr_accessor :jms_client_jar, :jndi_properties,
+                  :enabled_connection_factories, :enabled_queues, :enabled_topics
+  end
   
   #
   # Metodos de configuracao da conexao com o provedor JMS.
@@ -204,15 +213,6 @@ module JSparrow
     def lookup_resource(jndi_name)
       @jndi_context.lookup(jndi_name)
     end
-  end
-
-  #
-  # Configuracoes necessarias para que clientes JMS se conetem
-  # ao provedor de mensageria via contexto JNDI.
-  #
-  class Configuration
-    attr_accessor :jms_client_jar, :jndi_properties,
-                  :enabled_connection_factories, :enabled_queues, :enabled_topics
   end
 
   #
