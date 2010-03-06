@@ -14,7 +14,7 @@ JSparrow::Connection.configure do
   enable_topics :test_topic => 'TestTopic'
 end
 
-jms_client = JSparrow::Connection.new_client
+jms_client = new_jsparrow_client
 jms_client.start
 
 jms_client.topic_sender(:test_topic).send_text_message('jsparrow rocks!') do |msg|

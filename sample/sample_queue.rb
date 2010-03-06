@@ -14,7 +14,7 @@ JSparrow::Connection.configure do
   enable_queues :test_queue => 'TestQueue'
 end
 
-jms_client = JSparrow::Connection.new_client
+jms_client = new_jsparrow_client
 jms_client.start
 
 jms_client.queue_sender(:test_queue).send_text_message('jsparrow rocks!') do |msg|

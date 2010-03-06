@@ -38,7 +38,7 @@ WARNING: OpenJMS will be used as JMS provider, but any other could be used with 
 
 3) Create the client and start it
 
-  jms_client = JSparrow::Connection.new_client
+  jms_client = new_jsparrow_client
   jms_client.start
 
 4) OK! Now you can send and receive messages right now!
