@@ -1,30 +1,25 @@
-# Classes Java usadas nesse arquivo
 import 'javax.jms.Session'
 
 module JSparrow
   module Messaging
 
     #
-    # Tempo padrao de timeout no recebimento de mensagens = 1 milesegundo.
+    # Default timeout to receive messages = 1 millisecond.
     #
     DEFAULT_RECEIVER_TIMEOUT = 1000
   
     #
-    # Classe base para mensageiros, que enviam ou recebem mensagens, tanto
-    # para filas ou topicos.
+    # Base class to define messangers (for queues and topics).
     #
     class Base
       def initialize(connection_factory, destination)
-        # Fabrica de conexoes JMS
         @connection_factory = connection_factory
-
-        # Destino JMS para envio ou recebimento de mensagens
-        @destination = destination
+        @destination        = destination
       end
     end
     
     #
-    # Emissor de mensagens.
+    # Message sender.
     #
     class Sender < Base
       def send_text_message(text)
@@ -64,7 +59,6 @@ module JSparrow
       end
       
       def send_messages(&message_sender)
-        # Cria uma conexao, uma sessao e um emissor de qualquer tipo de mensagem
         connection = @connection_factory.create_connection
         session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
         producer   = session.create_producer(@destination)
@@ -73,18 +67,14 @@ module JSparrow
           include JMS::Session::OverrideMethods
         end
         
-        # Passa o controle para quem trata a emissao de mensagens
         message_sender.call(session, producer)
 
-        # Fecha a conexao
         connection.close
       end
       
-      # --- Private methods --- #
       private
       
         def send_message(&message_creator)
-          # Cria uma conexao, uma sessao e um emissor de qualquer tipo de mensagem
           connection = @connection_factory.create_connection
           session    = connection.create_session(true, Session::AUTO_ACKNOWLEDGE)
           producer   = session.create_producer(@destination)
@@ -93,20 +83,17 @@ module JSparrow
             include JMS::Session::OverrideMethods
           end
         
-          # Obtem uma mensagem (TextMessage, ObjectMessage ou MapMessage) do criador especifico
           message = message_creator.call(session)
         
-          # Envia a mensagem
           producer.send(message)
         
-          # Commita a sessao e fecha a conexao
           session.commit
           connection.close
         end
     end
     
     #
-    # Receptor de mensagens.
+    # Message receiver.
     #
     class Receiver < Base
       def receive_message(criteria_for_receiving = {:timeout => DEFAULT_RECEIVER_TIMEOUT, :selector => ''}, &message_handler)
@@ -117,11 +104,9 @@ module JSparrow
         receive(:many_messages, criteria_for_receiving, &message_handler)
       end
       
-      # --- Private methods --- #
       private
       
         def receive(how_much_messages, criteria_for_receiving, &message_handler)
-          # Cria uma conexao, uma sessao e um consumidor de qualquer tipo de mensagem
           connection = @connection_factory.create_connection
           session    = connection.create_session(false, Session::AUTO_ACKNOWLEDGE)
       
@@ -131,23 +116,19 @@ module JSparrow
 
           consumer = session.create_consumer(@destination, criteria_for_receiving[:selector])
         
-          # Prepara a conexao para receber mensagens
           connection.start
         
-          # Inicia o recebimento de mensagens
           timeout = criteria_for_receiving[:timeout] || DEFAULT_RECEIVER_TIMEOUT
           
-          # Uma (if) mensagem ou muitas (while) mensagens?
+          # One message (if) or many masseges (while)
           conditional_keyword = (how_much_messages.eql? :one_message) ? 'if' : 'while'
         
           eval %Q{
             #{conditional_keyword} (received_message = consumer.receive(timeout))
-              # Delega o tratamento da mensagem para o bloco recebido
               message_handler.call(received_message)
             end
           }
         
-          # Fecha a conexao
           connection.close
         end
     end

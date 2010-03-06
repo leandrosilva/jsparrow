@@ -1,16 +1,13 @@
-# Classes Java usadas nesse arquivo
 import 'javax.naming.InitialContext'
 
 module JSparrow
   #
-  # Cliente JMS que possibilita a conexao com o servidor de aplicacoes Java EE
-  # que prove o servico JMS.
+  # Client to send and receive messages to/from the JMS provider.
   #
   class Client
     def initialize(connection)
       @connection = connection
   
-      # Conexoes, filas, topicos, senders e receivers que serao habilitados
       @connection_factories = {}
       @queues               = {}
       @queue_senders        = {}
@@ -78,7 +75,6 @@ module JSparrow
           Messaging::Receiver.new(topic_connection_factory, topic(topic_name))
     end
 
-    # -- Private methods -- #
     private
 
       def queue_connection_factory
