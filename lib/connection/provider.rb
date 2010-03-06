@@ -1,5 +1,6 @@
 module JSparrow
   module Connection
+    
     #
     # Class for establish connection with JMS provider throught JNDI. 
     #

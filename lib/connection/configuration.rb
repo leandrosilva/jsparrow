@@ -1,5 +1,6 @@
 module JSparrow
   module Connection
+
     #
     # Connection configuration to connect the JMS provider.
     #

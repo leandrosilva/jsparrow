@@ -1,13 +1,14 @@
 import 'javax.naming.InitialContext'
 
 module JSparrow
+  
   #
   # Client to send and receive messages to/from the JMS provider.
   #
   class Client
     def initialize(connection)
       @connection = connection
-  
+
       @connection_factories = {}
       @queues               = {}
       @queue_senders        = {}
@@ -23,7 +24,7 @@ module JSparrow
 
     def start
       @connection.open
-  
+
       @connection_factories, @queues, @topics = lookup_resources
     end
 
@@ -41,7 +42,7 @@ module JSparrow
 
     def queue(queue_name)
       raise NameError, "Queue '#{queue_name}' does not exist." unless queue_enabled?(queue_name)
-  
+
       @queues[queue_name]
     end
 
@@ -61,7 +62,7 @@ module JSparrow
 
     def topic(topic_name)
       raise NameError, "Topic '#{topic_name}' does not exist." unless topic_enabled?(topic_name)
-  
+
       @topics[topic_name]
     end
 
@@ -89,7 +90,7 @@ module JSparrow
         lookuped_connection_factories = @connection.lookup_resources(@connection.configuration.enabled_connection_factories)
         lookuped_queues               = @connection.lookup_resources(@connection.configuration.enabled_queues)
         lookuped_topic                = @connection.lookup_resources(@connection.configuration.enabled_topics)
-        
+      
         return lookuped_connection_factories, lookuped_queues, lookuped_topic
       end
   end
