@@ -2,7 +2,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
 describe JSparrow::Listener do
 
-  context 'When inherited and created' do
+  context 'when inherited and created' do
 
     subject do
       new_named_jms_listener
@@ -37,7 +37,7 @@ describe JSparrow::Listener do
     end
   end
   
-  context 'When anonymously created' do
+  context 'when anonymously created' do
    
     subject do
       new_anonymous_jms_listener

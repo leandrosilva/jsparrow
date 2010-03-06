@@ -6,7 +6,7 @@ describe JSparrow::Client do
     new_jms_client
   end
   
-  context 'When created' do
+  context 'when created' do
   
     it 'should be started and stoped' do
       subject.start
@@ -40,7 +40,7 @@ describe JSparrow::Client do
     end
   end
   
-  context 'When started' do
+  context 'when started' do
 
     before(:all) do
       subject.start

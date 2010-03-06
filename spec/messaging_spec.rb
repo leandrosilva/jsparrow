@@ -2,7 +2,7 @@ require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
 describe JSparrow::Messaging do
 
-  context 'When have a Sender and a Receiver for a Queue' do
+  context 'when have a Sender and a Receiver for a Queue' do
   
     before(:all) do
       @jms_client = new_jms_client

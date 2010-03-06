@@ -6,7 +6,7 @@ describe JSparrow::Connection do
     configure_connection
   end
   
-  context 'When configured' do
+  context 'when configured' do
   
     it 'should known a jms_client_jar' do
       subject.jms_client_jar.should_not be nil
