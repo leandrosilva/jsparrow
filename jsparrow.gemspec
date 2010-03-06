@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Leandro Silva"]
-  s.date = %q{2010-03-05}
+  s.date = %q{2010-03-06}
   s.email = %q{leandrodoze@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -22,6 +22,8 @@ Gem::Specification.new do |s|
      "VERSION.yml",
      "lib/client.rb",
      "lib/connection.rb",
+     "lib/connection/configuration.rb",
+     "lib/connection/provider.rb",
      "lib/error.rb",
      "lib/javaee.rb",
      "lib/javaee/javaee-1.5.jar",
