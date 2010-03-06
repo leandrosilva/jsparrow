@@ -11,29 +11,41 @@ module JSparrow
   class Listener
     include MessageListener
     
-    #
-    # Nome (configurado no setup da conexao) do destino JMS que sera escutado.
-    #
-    # Invariavelmente deve ser usado pelas subclasses, para informar o nome da queue
-    # ou topico que sera escutado.
-    #
-    # listen_to :queue => :registered_name_of_queue
-    # listen_to :topic => :registered_name_of_topic
-    #
-    def self.listen_to(destination)
-      configure(:listen_to_destination, destination)
-    end
+    class << self
+      #
+      # Nome (configurado no setup da conexao) do destino JMS que sera escutado.
+      #
+      # Invariavelmente deve ser usado pelas subclasses, para informar o nome da queue
+      # ou topico que sera escutado.
+      #
+      # listen_to :queue => :registered_name_of_queue
+      # listen_to :topic => :registered_name_of_topic
+      #
+      def listen_to(destination)
+        configure(:listen_to_destination, destination)
+      end
     
-    #
-    # Criterios de selecao de mensagens, seguindo o padrao JMS.
-    #
-    # Invariavelmente as subclasses precisam usar esse metodo, se quiserem definir
-    # os criterios de recebimento que este listener levara em conta.
-    #
-    # receive_only_in_criteria :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'"
-    #
-    def self.receive_only_in_criteria(criteria = {:selector => ''})
-      configure(:criteria_to_receiving, criteria)
+      #
+      # Criterios de selecao de mensagens, seguindo o padrao JMS.
+      #
+      # Invariavelmente as subclasses precisam usar esse metodo, se quiserem definir
+      # os criterios de recebimento que este listener levara em conta.
+      #
+      # receive_only_in_criteria :selector => "recipient = 'jsparrow-spec' and to_listener = 'TestQueueListener'"
+      #
+      def receive_only_in_criteria(criteria = {:selector => ''})
+        configure(:criteria_to_receiving, criteria)
+      end
+      
+      private
+    
+        def configure(attribute, value)
+          instance_eval do
+            send(:define_method, attribute) do
+              value
+            end
+          end
+        end
     end
     
     def initialize(connection)
@@ -101,16 +113,7 @@ module JSparrow
       raise Error::AbstractMethodError.new(self.class.superclass, 'on_receive_message')
     end
 
-    # --- Private methods --- #
     private
-
-      def self.configure(attribute, value)
-        instance_eval do
-          send(:define_method, attribute) do
-            value
-          end
-        end
-      end
     
       def lookup_resources
         destination_type, destination_name = get_destination_info
