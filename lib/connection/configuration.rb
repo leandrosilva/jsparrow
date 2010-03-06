@@ -73,65 +73,15 @@ module JSparrow
       def enable_topics(jndi_names = {})
         configuration.enabled_topics = jndi_names
       end
-
-      #
-      # Metodo usado para criar um novo Client JMS.
-      #
-      def new_client
-        Client.new(new_connection)
-      end
-
-      #
-      # Metodo usado para criar um novo Listener de mensagens JMS.
-      #
-      # Example:
-      #
-      #   new_listener :as => ListenerClass
-      #
-      # ou
-      #
-      #   new_listener(
-      #     :listen_to => { :queue => :registered_name_of_queue },
-      #     :receive_only_in_criteria => { :selector => "recipient = 'jsparrow-spec'" }
-      #     ) do |received_message|
+    end
     
-      #     # do something
-      #   end
-      #
-      def new_listener(listener_spec, &on_receive_message)
-        is_anonymous_listener = listener_spec[:as].nil?
-      
-        if is_anonymous_listener
-          new_anonymous_listener(listener_spec, &on_receive_message)
-        else
-          new_named_listener(listener_spec)
-        end
-      end
-
-      private
-
-        def new_connection
-          jndi_context_builder = JNDI::ContextBuilder.new(configuration.jms_client_jar, configuration.jndi_properties)
-      
-          connection = Provider.new(configuration, jndi_context_builder)
-        end
-      
-        def new_named_listener(listener_spec)
-          listener_spec[:as].new(new_connection)
-        end
-    
-        def new_anonymous_listener(listener_spec, &on_receive_message)
-          listener = JSparrow::Listener.new(new_connection)
-      
-          (class << listener; self; end;).class_eval do
-            listen_to listener_spec[:listen_to] if listener_spec[:listen_to]
-            receive_only_in_criteria listener_spec[:receive_only_in_criteria] if listener_spec[:receive_only_in_criteria]
-          
-            define_method(:on_receive_message, &on_receive_message)
-          end
-      
-          listener
-        end
+    #
+    # Factory method.
+    #
+    def self.new
+      jndi_context_builder = JNDI::ContextBuilder.new(configuration.jms_client_jar, configuration.jndi_properties)
+  
+      connection = Provider.new(configuration, jndi_context_builder)
     end
   end
 end

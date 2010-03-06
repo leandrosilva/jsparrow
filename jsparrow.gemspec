@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "lib/error.rb",
      "lib/interaction.rb",
      "lib/interaction/client.rb",
+     "lib/interaction/interactors.rb",
      "lib/interaction/listener.rb",
      "lib/interaction/messaging.rb",
      "lib/javaee.rb",
