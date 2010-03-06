@@ -30,8 +30,8 @@ module JSparrow
       #
       # use_jms_client_jar "path/to/name_of_the_client_jar_file.jar"
       #
-      def use_jms_client_jar(client_jar)
-        configuration.jms_client_jar = client_jar
+      def use_jms_client_jar(jms_client_jar)
+        configuration.jms_client_jar = jms_client_jar
       end
   
       #
