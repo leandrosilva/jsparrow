@@ -1,8 +1,7 @@
 module JSparrow
   module Connection
     #
-    # Configuracoes necessarias para que clientes JMS se conetem
-    # ao provedor de mensageria via contexto JNDI.
+    # Connection configuration to connect the JMS provider.
     #
     class Configuration
       attr_accessor :jms_client_jar, :jndi_properties,
@@ -10,12 +9,10 @@ module JSparrow
     end
   
     #
-    # Metodos de configuracao da conexao com o provedor JMS.
+    # Class methods to configure the connection with the JMS provider.
     #
     class << self
-      #
-      # Metodo usado para configurar a conexao.
-      #
+
       def configure(&block)
         @@configuration = Configuration.new
       
@@ -24,15 +21,12 @@ module JSparrow
         @@configuration
       end
   
-      #
-      # Metodo usado para obter a configuracao para conexao com o provedor de JMS.
-      #
       def configuration
         @@configuration
       end
 
       #
-      # Use:
+      # Example:
       #
       # use_jms_client_jar "path/to/name_of_the_client_jar_file.jar"
       #
@@ -41,7 +35,7 @@ module JSparrow
       end
   
       #
-      # Use:
+      # Example:
       #
       #   use_jndi_properties :a_jndi_property_name_in_lower_case     => "a_value_of_property",
       #                       :other_jndi_property_name_in_lower_case => "other_value_of_property"
@@ -51,7 +45,7 @@ module JSparrow
       end
   
       #
-      # Use:
+      # Example:
       #
       #   enable_connection_factories :queue_connection_factory => "jndi_name_of_queue_connection_factory",
       #                               :topic_connection_factory => "jndi_name_of_topic_connection_factory"
@@ -61,7 +55,7 @@ module JSparrow
       end
   
       #
-      # Use:
+      # Example:
       #
       #   enable_queues :a_queue_name_in_lower_case     => "jndi_name_of_a_queue",
       #                 :other_queue_name_in_lower_case => "jndi_name_of_other_queue"
@@ -71,7 +65,7 @@ module JSparrow
       end
   
       #
-      # Use:
+      # Example:
       #
       #   enable_topics :a_topic_name_in_lower_case     => "jndi_name_of_a_topic",
       #                 :other_topic_name_in_lower_case => "jndi_name_of_other_topic"
@@ -90,9 +84,9 @@ module JSparrow
       #
       # Metodo usado para criar um novo Listener de mensagens JMS.
       #
-      # Use:
+      # Example:
       #
-      #   new_listener(:as => ListenerClass)
+      #   new_listener :as => ListenerClass
       #
       # ou
       #
@@ -114,28 +108,18 @@ module JSparrow
         end
       end
 
-      # --- Private methods --- #
       private
 
-        #
-        # Metodo usado para criar uma nova Connection
-        #
         def new_connection
           jndi_context_builder = JNDI::ContextBuilder.new(configuration.jms_client_jar, configuration.jndi_properties)
       
           connection = Provider.new(configuration, jndi_context_builder)
         end
       
-        #
-        # Metodo usado para construir Listener de mensagens JMS declarado.
-        #
         def new_named_listener(listener_spec)
           listener_spec[:as].new(new_connection)
         end
     
-        #
-        # Metodo usado para construir Listener de mensagens JMS anonimo.
-        #
         def new_anonymous_listener(listener_spec, &on_receive_message)
           listener = JSparrow::Listener.new(new_connection)
       

@@ -1,7 +1,7 @@
 module JSparrow
   module Connection
     #
-    # Classe base para estabelecer conexao com o provedor JMS via JNDI. 
+    # Class for establish connection with JMS provider throught JNDI. 
     #
     class Provider
       attr_reader :configuration
@@ -60,7 +60,7 @@ module JSparrow
     end
 
     #
-    # Erro para quando uma conexao esta num estado invalido para uma operacao (open ou close).
+    # Error to signal invalid state on open or close operation.
     #
     class InvalidStateError < StandardError
       attr_reader :state, :operation
@@ -74,7 +74,7 @@ module JSparrow
     end
 
     #
-    # Erro para quando nao for possivel estabelecer conexao com o provedor JMS.
+    # Error to signal impossibility to connect the JMS provider.
     #
     class InitializationError < StandardError
       attr_reader :configuration, :cause
