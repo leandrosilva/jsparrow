@@ -1,5 +1,5 @@
 module JSparrow
-  module Interaction
+  module Interactors
     
     #
     # Class methods to build interactors (Client and Listener).
@@ -42,7 +42,7 @@ module JSparrow
         end
 
         def new_anonymous_listener(listener_spec, &on_receive_message)
-          listener = JSparrow::Listener.new(new_connection)
+          listener = Listener.new(new_connection)
 
           (class << listener; self; end;).class_eval do
             listen_to listener_spec[:listen_to] if listener_spec[:listen_to]
@@ -62,9 +62,9 @@ module JSparrow
 end
 
 def new_jsparrow_client
-  JSparrow::Interaction.new_client
+  JSparrow::Interactors.new_client
 end
 
 def new_jsparrow_listener(listener_spec, &on_receive_message)
-  JSparrow::Interaction.new_listener(listener_spec, &on_receive_message)
+  JSparrow::Interactors.new_listener(listener_spec, &on_receive_message)
 end

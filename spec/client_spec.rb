@@ -1,6 +1,6 @@
 require File.dirname(File.expand_path(__FILE__)) + '/spec_helper.rb'
 
-describe JSparrow::Client do
+describe JSparrow::Interactors::Client do
 
   subject do
     new_jms_client
